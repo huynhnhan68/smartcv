@@ -1,4 +1,4 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
 # App routes require authentication - no value in crawling them
@@ -9,4 +9,5 @@ Disallow: /coach
 Disallow: /resumes
 Disallow: /auth/
 
-Sitemap: https://hardikjp7.github.io/applytic/sitemap.xml
+Sitemap: https://huynhnhan68.github.io/SmartCV/sitemap.xml
+

@@ -19,14 +19,15 @@ from typing import Optional, Literal
 from shared.middleware import resp, get_user_id, parse_body, now_iso
 
 dynamodb = boto3.resource("dynamodb")
-s3_client = boto3.client("s3")
+# Region explicit để presigned URL đúng endpoint
+s3_client = boto3.client("s3", region_name="ap-southeast-1")
 
 TABLE_NAME = os.environ["TABLE_NAME"]
 RESUME_BUCKET = os.environ["RESUME_BUCKET"]
 table = dynamodb.Table(TABLE_NAME)
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
-tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
+tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 
 class CreateApplicationRequest(BaseModel):
@@ -240,11 +241,13 @@ def get_upload_url(user_id: str, body: dict, event: dict) -> dict:
         return resp(400, {"error": f"Validation error: {e}"}, event)
 
     s3_key = f"resumes/{user_id}/{req.versionName}/{req.filename}"
+    logger.info("Generating presigned upload URL", extra={"s3_key": s3_key, "bucket": RESUME_BUCKET})
     url = s3_client.generate_presigned_url(
         "put_object",
         Params={"Bucket": RESUME_BUCKET, "Key": s3_key, "ContentType": req.contentType},
         ExpiresIn=300,
     )
+    logger.info("Presigned URL generated successfully", extra={"s3_key": s3_key})
     return resp(200, {"uploadUrl": url, "s3Key": s3_key, "versionName": req.versionName}, event)
 
 
@@ -314,3 +317,4 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
     except Exception:
         logger.exception("Unhandled error")
         return resp(500, {"error": "Internal server error"}, event)
+

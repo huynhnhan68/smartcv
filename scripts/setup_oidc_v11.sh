@@ -1,6 +1,6 @@
-#!/bin/bash
+﻿#!/bin/bash
 # =============================================================================
-# Applytic v1.1 — OIDC Role Setup Script
+# SmartCV v1.1 — OIDC Role Setup Script
 # Run this ONCE manually before deploying v1.1.
 # After running, add AWS_DEPLOY_ROLE_ARN to GitHub Secrets.
 # =============================================================================
@@ -8,9 +8,9 @@
 set -e
 
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-REPO="hardikjp7/applytic"
+REPO="huynhnhan68/SmartCV"
 REGION="us-east-1"
-ROLE_NAME="applytic-github-deploy"
+ROLE_NAME="SmartCV-github-deploy"
 
 echo "Setting up OIDC deploy role for:"
 echo "  Account: $ACCOUNT_ID"
@@ -56,7 +56,7 @@ echo "Creating IAM role: $ROLE_NAME..."
 aws iam create-role \
   --role-name "$ROLE_NAME" \
   --assume-role-policy-document "$TRUST_POLICY" \
-  --description "GitHub Actions OIDC deploy role for Applytic" \
+  --description "GitHub Actions OIDC deploy role for SmartCV" \
   2>/dev/null || echo "  Role already exists, updating trust policy..."
 
 # Update trust policy in case role already exists
@@ -101,7 +101,7 @@ EOF
 
 aws iam put-role-policy \
   --role-name "$ROLE_NAME" \
-  --policy-name "applytic-deploy-policy" \
+  --policy-name "SmartCV-deploy-policy" \
   --policy-document "$DEPLOY_POLICY"
 
 ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}"
@@ -117,3 +117,4 @@ echo "  4. Run CDK bootstrap if not already done:"
 echo "     cd cdk && cdk bootstrap aws://${ACCOUNT_ID}/${REGION}"
 echo ""
 echo "Role ARN: ${ROLE_ARN}"
+

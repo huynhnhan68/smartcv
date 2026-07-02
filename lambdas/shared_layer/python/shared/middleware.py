@@ -1,5 +1,5 @@
 """
-Shared middleware for all Applytic Lambda handlers.
+Shared middleware for all SmartCV Lambda handlers.
 Single source of truth for:
   - HTTP response formatting + CORS headers
   - Auth/user extraction from Cognito JWT claims
@@ -15,12 +15,15 @@ from datetime import datetime, timezone
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 ALLOWED_ORIGINS = [
     "https://d3jumje9o63lys.cloudfront.net",
-    "https://hardikjp7.github.io",
-    "https://hardikjp7.com"
+    "https://main.d1s2bq5nqqwd9y.amplifyapp.com",
+    "https://huynhnhan68.github.io",
+    "https://huynhnhan68.com",
+    "http://localhost:5173",
+    "http://localhost:5174",
 ]
 
 def _get_cors_origin(event: dict) -> str:
@@ -87,3 +90,4 @@ def with_middleware(handler_fn):
             logger.exception("Unhandled exception", extra={"correlation_id": correlation_id})
             return resp(500, {"error": "Internal server error"}, event)
     return wrapper
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Follow-up Lambda - v2.0
 Triggered daily by EventBridge at 9am UTC.
 Scans all active applications where:
@@ -26,12 +26,12 @@ cognito = boto3.client("cognito-idp")
 
 TABLE_NAME = os.environ["TABLE_NAME"]
 USER_POOL_ID = os.environ["USER_POOL_ID"]
-FROM_EMAIL = os.environ.get("SES_FROM_EMAIL", "noreply@applytic.app")
+FROM_EMAIL = os.environ.get("SES_FROM_EMAIL", "noreply@SmartCV.app")
 
 table = dynamodb.Table(TABLE_NAME)
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
-tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
+tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 FOLLOWUP_STATUSES = {"applied", "screened"}
 
@@ -118,13 +118,13 @@ def build_followup_email(apps: list[dict]) -> str:
       </tbody>
     </table>
     <div style="margin-top:24px;">
-      <a href="https://hardikjp7.github.io/applytic/board"
+      <a href="https://huynhnhan68.github.io/SmartCV/board"
          style="background:#534ab7;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;">
         Open Board
       </a>
     </div>
     <p style="color:#b0aea8;font-size:11px;margin-top:24px;">
-      You're receiving this because you set a follow-up date in Applytic.
+      You're receiving this because you set a follow-up date in SmartCV.
       Update the application status to stop future reminders.
     </p>
   </div>
@@ -134,7 +134,7 @@ def build_followup_email(apps: list[dict]) -> str:
 
 @tracer.capture_method
 def send_followup_email(email: str, html: str, count: int):
-    subject = f"Applytic - {count} application{'s' if count > 1 else ''} due for follow-up"
+    subject = f"SmartCV - {count} application{'s' if count > 1 else ''} due for follow-up"
     ses.send_email(
         Source=FROM_EMAIL,
         Destination={"ToAddresses": [email]},
@@ -185,3 +185,4 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
 
     logger.info("Follow-up run complete", extra={"sent": sent, "skipped": skipped})
     return {"statusCode": 200, "body": json.dumps({"sent": sent, "skipped": skipped})}
+

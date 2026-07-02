@@ -21,15 +21,16 @@ from pydantic import BaseModel, field_validator
 from shared.middleware import resp, get_user_id, parse_body, now_iso
 
 dynamodb = boto3.resource("dynamodb")
-bedrock = boto3.client("bedrock-runtime")
+# Converse API hỗ trợ tất cả Bedrock models (Amazon Nova, Anthropic, etc.)
+bedrock = boto3.client("bedrock-runtime", region_name="ap-southeast-1")
 
 TABLE_NAME = os.environ["TABLE_NAME"]
 MODEL_ID = os.environ["BEDROCK_MODEL_ID"]
 CHAT_DAILY_LIMIT = int(os.environ.get("CHAT_DAILY_LIMIT", "20"))
 table = dynamodb.Table(TABLE_NAME)
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
-tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
+tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 
 class ChatRequest(BaseModel):
@@ -391,25 +392,87 @@ Keep responses under 250 words unless asked for more detail."""
 
     user_prompt = f"Here is my job search data:\n\n{context}\n\nMy question: {user_message}"
 
-    if "anthropic" in MODEL_ID:
-        body = {
-            "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 1024,
-            "system": system_prompt,
-            "messages": [{"role": "user", "content": user_prompt}],
-        }
-    else:
-        body = {
-            "messages": [{"role": "user", "content": [{"text": system_prompt + "\n\n" + user_prompt}]}],
-            "inferenceConfig": {"maxTokens": 1024},
-        }
+    try:
+        # Thử Bedrock Converse API trước (hỗ trợ Nova, Claude, Titan)
+        response = bedrock.converse(
+            modelId=MODEL_ID,
+            system=[{"text": system_prompt}],
+            messages=[{"role": "user", "content": [{"text": user_prompt}]}],
+            inferenceConfig={"maxTokens": 1024, "temperature": 0.7},
+        )
+        return response["output"]["message"]["content"][0]["text"]
+    except Exception as e:
+        logger.warning("Bedrock unavailable, using smart fallback coach", extra={"error": str(e)})
+        return _rule_based_coach(user_message, context)
 
-    response = bedrock.invoke_model(modelId=MODEL_ID, body=json.dumps(body))
-    result = json.loads(response["body"].read())
-    if "anthropic" in MODEL_ID:
-        return result["content"][0]["text"]
-    else:
-        return result["output"]["message"]["content"][0]["text"]
+
+def _rule_based_coach(user_message: str, context: str) -> str:
+    """Smart rule-based coaching khi Bedrock không khả dụng."""
+    msg = user_message.lower()
+
+    # Parse context để lấy metrics thực tế
+    total = response_rate = rejection_count = interview_count = 0
+    for line in context.split("\n"):
+        if "Total applications:" in line:
+            try: total = int(line.split(":")[-1].strip())
+            except: pass
+        if "Response rate:" in line:
+            try: response_rate = float(line.split(":")[-1].strip().rstrip("%"))
+            except: pass
+        if "rejected" in line.lower(): rejection_count += 1
+        if "interview" in line.lower(): interview_count += 1
+
+    # Chọn advice phù hợp dựa trên câu hỏi
+    if any(k in msg for k in ["resume", "cv", "version"]):
+        if total > 0 and response_rate < 20:
+            return (f"Your response rate is {response_rate:.0f}% — below the 20% benchmark. "
+                    "This suggests your resume may need targeted keyword optimization for ATS systems. "
+                    "Try tailoring your resume to each job description, focusing on matching 70%+ of the required skills. "
+                    "Consider A/B testing resume versions by tracking which version gets more responses in analytics.")
+        return ("Track which resume version gets the most responses in the Analytics section. "
+                "Use consistent version names when logging applications so you can compare conversion rates.")
+
+    if any(k in msg for k in ["rejection", "rejected", "fail"]):
+        return (f"With {rejection_count} rejections in your data, focus on quality over quantity. "
+                "Analyze which companies and roles rejected you — look for patterns in company size or role level. "
+                "If rejections happen at application stage, optimize your resume. "
+                "If rejections happen after interviews, focus on interview preparation.")
+
+    if any(k in msg for k in ["interview", "interview rate", "screen"]):
+        if interview_count == 0:
+            return ("No interviews yet — focus on getting past the initial screening. "
+                    "Ensure your resume has strong keywords matching job descriptions. "
+                    "LinkedIn connections and referrals have 3-4x higher interview rates than cold applications.")
+        return (f"You have {interview_count} interview(s). "
+                "Prepare a strong STAR-method response library. "
+                "Research each company's culture, recent news, and tech stack before interviews.")
+
+    if any(k in msg for k in ["source", "channel", "where", "linkedin", "referral"]):
+        return ("Referrals typically yield 3-4x higher conversion rates than job boards. "
+                "Look at your Analytics to see which source has the best response rate. "
+                "Prioritize the channel that's working best for you.")
+
+    if any(k in msg for k in ["strategy", "improve", "better", "tweak", "advice", "tip"]):
+        if total == 0:
+            return "Start logging applications to get personalized advice based on your actual data."
+        advice = []
+        if response_rate < 15:
+            advice.append(f"Your {response_rate:.0f}% response rate is low — focus on resume quality and keyword matching.")
+        if interview_count == 0 and total > 5:
+            advice.append("No interviews after 5+ applications — consider targeting roles that better match your experience level.")
+        if total > 0:
+            advice.append(f"With {total} applications logged, keep the momentum going. Aim for 5-10 quality applications per week.")
+        return " ".join(advice) if advice else (
+            f"You've applied to {total} positions with a {response_rate:.0f}% response rate. "
+            "Focus on quality over quantity — tailor each application to the specific role.")
+
+    # Default response dựa trên data thực tế
+    if total > 0:
+        return (f"Based on your {total} applications ({response_rate:.0f}% response rate): "
+                "Focus on the roles and companies where you get the most traction. "
+                "Check your Analytics tab for detailed patterns on what's working.")
+    return ("Log your applications consistently to unlock personalized AI coaching advice. "
+            "Once you have 3+ entries, I can analyze your patterns and provide specific recommendations.")
 
 
 @logger.inject_lambda_context(correlation_id_path="requestContext.requestId")
@@ -463,3 +526,4 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
     except Exception:
         logger.exception("Unhandled error in insights handler")
         return resp(500, {"error": "Internal server error"}, event)
+

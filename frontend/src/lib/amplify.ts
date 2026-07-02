@@ -5,7 +5,7 @@ import axios from 'axios'
 // SmartCV: OAuth config cho Google sign-in qua Cognito Hosted UI.
 // redirectSignIn / redirectSignOut nhận nhiều URLs — Amplify tự chọn
 // URL khớp với window.location.origin tại runtime.
-// Hoạt động trên: localhost (dev), GitHub Pages, CloudFront (sau khi verify).
+// Hoạt động trên: localhost (dev), GitHub Pages, Amplify Hosting.
 Amplify.configure({
   Auth: {
     Cognito: {
@@ -19,11 +19,13 @@ Amplify.configure({
             'http://localhost:5173/auth/callback',
             'http://localhost:5174/auth/callback',
             'https://huynhnhan68.github.io/smartcv/auth/callback',
+            'https://main.d1s2bq5nqqwd9y.amplifyapp.com/auth/callback',
           ],
           redirectSignOut: [
             'http://localhost:5173/',
             'http://localhost:5174/',
             'https://huynhnhan68.github.io/smartcv/',
+            'https://main.d1s2bq5nqqwd9y.amplifyapp.com/',
           ],
           responseType: 'code',
         },
@@ -31,6 +33,7 @@ Amplify.configure({
     },
   },
 })
+
 
 
 export const api = axios.create({
@@ -44,3 +47,5 @@ api.interceptors.request.use(async (config) => {
   if (token) config.headers.Authorization = token
   return config
 })
+
+

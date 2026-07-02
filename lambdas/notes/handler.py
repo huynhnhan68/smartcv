@@ -1,4 +1,4 @@
-"""
+﻿"""
 Notes Lambda - v2.0
 Handles:
   GET    /applications/{appId}/notes          - list all notes for an application
@@ -34,8 +34,8 @@ dynamodb = boto3.resource("dynamodb")
 TABLE_NAME = os.environ["TABLE_NAME"]
 table = dynamodb.Table(TABLE_NAME)
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
-tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
+tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 MAX_NOTE_LENGTH = 2000
 
@@ -199,3 +199,4 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
     except Exception:
         logger.exception("Unhandled error in notes handler")
         return resp(500, {"error": "Internal server error"}, event)
+

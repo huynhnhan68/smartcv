@@ -1,1 +1,2 @@
-# Shared utilities for all Applytic Lambda handlers
+﻿# Shared utilities for all SmartCV Lambda handlers
+

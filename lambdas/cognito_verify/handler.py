@@ -1,4 +1,4 @@
-"""
+﻿"""
 Cognito Post Confirmation Lambda — v1.2
 Triggered automatically after a user confirms their Cognito account.
 Sends SES email verification so the user can receive Monday digests.
@@ -12,7 +12,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 ses = boto3.client("ses")
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 
 def lambda_handler(event: dict, context: LambdaContext) -> dict:
@@ -55,3 +55,4 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
 
     # Always return event unchanged
     return event
+

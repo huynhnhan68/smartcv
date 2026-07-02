@@ -1,6 +1,6 @@
-# Contributing to Applytic
+﻿# Contributing to SmartCV
 
-Thanks for your interest in contributing! Applytic is an AI-powered job application tracker built on AWS serverless infrastructure. This guide will get you set up and contributing quickly.
+Thanks for your interest in contributing! SmartCV is an AI-powered job application tracker built on AWS serverless infrastructure. This guide will get you set up and contributing quickly.
 
 ---
 
@@ -32,7 +32,7 @@ Thanks for your interest in contributing! Applytic is an AI-powered job applicat
 | CI/CD | GitHub Actions |
 
 **Live URLs:**
-- GitHub Pages: https://hardikjp7.github.io/applytic
+- GitHub Pages: https://huynhnhan68.github.io/SmartCV
 - CloudFront: https://d3jumje9o63lys.cloudfront.net
 
 ---
@@ -124,7 +124,7 @@ Tests use `importlib.util.spec_from_file_location` to avoid module name collisio
 ## Project Structure
 
 ```
-applytic/
+SmartCV/
 ├── cdk/                    # AWS CDK v2 TypeScript — all infrastructure
 ├── lambdas/
 │   ├── applications/       # CRUD, status pipeline, S3 presigned URLs
@@ -211,7 +211,7 @@ docs: add CONTRIBUTING.md and PR template
 - Dark mode: always add `dark:` variants when adding new color classes
 
 ### CDK (Infrastructure)
-- Define all resources in `cdk/lib/applytic-stack.ts`
+- Define all resources in `cdk/lib/SmartCV-stack.ts`
 - Never hardcode account IDs, bucket names, or ARNs — use CDK tokens and references
 - IAM policies should follow least-privilege — avoid `Resource: "*"` unless required (Bedrock inference profiles currently require it)
 
@@ -232,4 +232,5 @@ Include steps to reproduce, expected vs actual behaviour, and relevant logs or s
 
 ## Questions?
 
-Open a [GitHub Discussion](https://github.com/hardikjp7/applytic/discussions) or file an issue with the `question` label.
+Open a [GitHub Discussion](https://github.com/huynhnhan68/SmartCV/discussions) or file an issue with the `question` label.
+

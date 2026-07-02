@@ -1,4 +1,4 @@
-"""
+﻿"""
 Digest Lambda — v1.2
 Triggered every Monday 8am UTC by EventBridge.
 """
@@ -22,8 +22,8 @@ MODEL_ID = os.environ["BEDROCK_MODEL_ID"]
 FROM_EMAIL = os.environ.get("SES_FROM_EMAIL", "noreply@yourdomain.com")
 table = dynamodb.Table(TABLE_NAME)
 
-logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
-tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "applytic"))
+logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
+tracer = Tracer(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 
 @tracer.capture_method
@@ -172,3 +172,4 @@ def lambda_handler(event, context: LambdaContext):
 
     logger.info("Digest run complete", extra={"sent": sent, "failed": failed})
     return {"statusCode": 200, "body": json.dumps({"sent": sent, "failed": failed})}
+

@@ -1,19 +1,19 @@
-# Applytic
+﻿# SmartCV
 
-![CI/CD](https://github.com/hardikjp7/applytic/actions/workflows/deploy.yml/badge.svg)
+![CI/CD](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml/badge.svg)
 
 > AI-powered job application tracker that learns from your rejections.
 
 
-### 🚀 [Start Using Applytic](https://hardikjp7.com/applytic/)
+### 🚀 [Start Using SmartCV](https://huynhnhan68.com/SmartCV/)
 *Live in production. Free to use.*
 
 
 <p align="center">
-  <img src="applytic.gif" alt="Applytic Demo GIF" width="800"/>
+  <img src="SmartCV.gif" alt="SmartCV Demo GIF" width="800"/>
 </p>
 
-Applytic tracks every job application you submit, detects patterns across rejections (which resume version converts best, which source channel works, which company sizes respond), and uses Amazon Bedrock to turn that data into actionable coaching - delivered as a chat interface and a weekly email digest.
+SmartCV tracks every job application you submit, detects patterns across rejections (which resume version converts best, which source channel works, which company sizes respond), and uses Amazon Bedrock to turn that data into actionable coaching - delivered as a chat interface and a weekly email digest.
 
 Built end-to-end on AWS as a production-grade application. Every service is serverless, infrastructure is code, and every push auto-deploys via GitHub Actions.
 
@@ -82,10 +82,10 @@ So I instrumented my own job search. Every application became a data point. Afte
 ## Architecture
 
 <p align="center">
-  <img src="architecture.png" alt="Applytic System Architecture" width="800"/>
+  <img src="architecture.png" alt="SmartCV System Architecture" width="800"/>
 </p>
 
-<!---APPLYTIC — SYSTEM ARCHITECTURE
+<!---SmartCV — SYSTEM ARCHITECTURE
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  LAYER 01 — BROWSER / FRONTEND
@@ -111,10 +111,10 @@ Service    :  API Gateway (REST)
 Authorizer :  Cognito JWT (applied to all routes)
 
 Routes
-  /applications    →  applytic-applications Lambda
-  /insights        →  applytic-insights Lambda
-  /settings        →  applytic-settings Lambda
-  /notes           →  applytic-notes Lambda
+  /applications    →  SmartCV-applications Lambda
+  /insights        →  SmartCV-insights Lambda
+  /settings        →  SmartCV-settings Lambda
+  /notes           →  SmartCV-notes Lambda
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -122,7 +122,7 @@ Routes
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ┌─────────────────────────────┐  ┌─────────────────────────────┐
-│  applytic-applications      │  │      applytic-insights      │
+│  SmartCV-applications      │  │      SmartCV-insights      │
 │   ────────────────────────  │  │   ───────────────────────── │
 │  • CRUD + status transitions│  │   • Pattern analysis engine │
 │  • S3 presigned URL gen     │  │   • Bedrock AI chat         │
@@ -130,7 +130,7 @@ Routes
 └─────────────────────────────┘  └─────────────────────────────┘
 
 ┌─────────────────────────────┐  ┌─────────────────────────────┐
-│     applytic-settings       │  │        applytic-notes       │
+│     SmartCV-settings       │  │        SmartCV-notes       │
 │  ─────────────────────────  │  │  ─────────────────────────  │
 │  • Weekly goal config       │  │  • Per-application notes    │
 │  • Streak tracking logic    │  │  • Timeline ordered queries │
@@ -144,7 +144,7 @@ Routes
 Trigger    :  Amazon EventBridge (cron schedules)
 
 ┌─────────────────────────────┐  ┌──────────────────────────────┐
-│       applytic-digest       │  │          applytic-followup   │
+│       SmartCV-digest       │  │          SmartCV-followup   │
 │  Trigger: Mon 8am UTC       │  │  Trigger: Daily 9am UTC      │
 │  ─────────────────────────  │  │  ─────────────────────────   │
 │  • Weekly summary via       │  │  • Overdue follow-up detect  │
@@ -157,7 +157,7 @@ Trigger    :  Amazon EventBridge (cron schedules)
  LAYER 04 — DATA & STORAGE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DynamoDB (table: applytic)
+DynamoDB (table: SmartCV)
   Design    :  Single-table
   Entities  :  Applications · Notes · Settings · Users · Streaks
   Index     :  GSI1 — userId partition key for all user queries
@@ -220,18 +220,18 @@ Pipeline steps:
                     │                           │                         │
               /applications                 /insights             /settings · /notes
                     │                           │                         │
-           applytic-applications           applytic-insights      applytic-settings
-           applytic-notes                       │                         │
+           SmartCV-applications           SmartCV-insights      SmartCV-settings
+           SmartCV-notes                       │                         │
                     │                      Bedrock (AI)                   │
                     └─────────────────────┴────────────────────┘
                                           │
-                                    DynamoDB (applytic)
+                                    DynamoDB (SmartCV)
                                     S3 (resumes — direct presigned)
                                     SES (email)
 
   EventBridge (cron)
-    ├── Mon 8am  → applytic-digest   → Bedrock → SES
-    └── Daily 9am → applytic-followup → SES
+    ├── Mon 8am  → SmartCV-digest   → Bedrock → SES
+    └── Daily 9am → SmartCV-followup → SES
 
   All Lambda invocations
     └── X-Ray tracing → CloudWatch → SNS alerts --->
@@ -280,10 +280,10 @@ Pipeline steps:
 ## Project Structure
 
 ```
-applytic/
+SmartCV/
 ├── cdk/                    # AWS CDK v2 stack - all infrastructure as code
 │   ├── bin/app.ts
-│   └── lib/applytic-stack.ts
+│   └── lib/SmartCV-stack.ts
 ├── lambdas/                # Python 3.12 Lambda handlers
 │   ├── applications/       # CRUD + presigned S3 URL generation
 │   ├── insights/           # Pattern analysis + Bedrock AI coaching
@@ -323,7 +323,7 @@ applytic/
 
 ## DynamoDB Single-Table Design
 
-Table name: `applytic`
+Table name: `SmartCV`
 
 | Entity | PK | SK | GSI1PK | GSI1SK |
 |---|---|---|---|---|
@@ -514,7 +514,7 @@ cd scripts && python seed_data.py --user-id YOUR_COGNITO_SUB
 
 ### 16. GitHub Pages blank page after login
 
-* **Issue:** `BrowserRouter` defaulted to `/` while the application was hosted under `/applytic/`.
+* **Issue:** `BrowserRouter` defaulted to `/` while the application was hosted under `/SmartCV/`.
 * **Fix:** Passed `import.meta.env.BASE_URL` as the `basename` to `BrowserRouter`.
 
 ### 17. Windows pip `--user` + `-t` conflict in `build_layer.sh`
@@ -568,4 +568,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, branching convent
 
 ## Author
 
-**Hardik** - [Github](https://github.com/hardikjp7)
+**SmartCV Team** - [Github](https://github.com/huynhnhan68)
+

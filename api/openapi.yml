@@ -1,9 +1,9 @@
-openapi: 3.0.3
+﻿openapi: 3.0.3
 
 info:
-  title: Applytic API
+  title: SmartCV API
   description: |
-    REST API for Applytic - an AI-powered job application tracker.
+    REST API for SmartCV - an AI-powered job application tracker.
     All routes are protected by a Cognito User Pool JWT authorizer attached at
     API Gateway. The bearer token is the Cognito ID token, sent as a raw value
     in the `Authorization` header (no `Bearer ` prefix - API Gateway's Cognito
@@ -15,8 +15,8 @@ info:
     actual input validation.
   version: "2.1.0"
   contact:
-    name: Hardik
-    url: https://github.com/hardikjp7/applytic
+    name: SmartCV Team
+    url: https://github.com/huynhnhan68/SmartCV
 
 servers:
   - url: https://mbjyu0w1k5.execute-api.us-east-1.amazonaws.com/v1
@@ -880,3 +880,4 @@ components:
           type: integer
           minimum: 1
           maximum: 500
+

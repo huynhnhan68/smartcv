@@ -1,4 +1,4 @@
-# 📋 SmartCV — Tài liệu minh chứng thiết lập AWS
+﻿# 📋 SmartCV — Tài liệu minh chứng thiết lập AWS
 
 > **Ngày thực hiện:** 30/06/2026  
 > **Chủ sở hữu:** huynhnhandn68@gmail.com  
@@ -47,25 +47,25 @@ aws configure set default.output        json
 
 ---
 
-## ✅ BƯỚC 3 — Copy source code Applytic → SmartCV
+## ✅ BƯỚC 3 — Copy source code SmartCV → SmartCV
 
-**Source:** `applytic-main/applytic-main/`  
+**Source:** `SmartCV-main/SmartCV-main/`  
 **Đích:** `SmartCV/`
 
 **Thay đổi chính trong CDK stack:**
 
-| Thuộc tính | Applytic (cũ) | SmartCV (mới) |
+| Thuộc tính | SmartCV (cũ) | SmartCV (mới) |
 |---|---|---|
-| Stack name | `ApplyticStack` | `SmartCVStack` |
-| DynamoDB table | `applytic` | `smartcv` |
-| S3 Resume | `applytic-resumes-{account}` | `smartcv-resumes-{account}` |
-| S3 Frontend | `applytic-frontend-{account}` | `smartcv-frontend-{account}` |
-| Cognito Pool | `applytic-users` | `smartcv-users` |
-| Cognito Domain | `applytic-auth.auth.us-east-1...` | `smartcv-auth.auth.ap-southeast-1...` |
-| Lambda prefix | `applytic-*` | `smartcv-*` |
+| Stack name | `SmartCVStack` | `SmartCVStack` |
+| DynamoDB table | `SmartCV` | `smartcv` |
+| S3 Resume | `SmartCV-resumes-{account}` | `smartcv-resumes-{account}` |
+| S3 Frontend | `SmartCV-frontend-{account}` | `smartcv-frontend-{account}` |
+| Cognito Pool | `SmartCV-users` | `smartcv-users` |
+| Cognito Domain | `SmartCV-auth.auth.us-east-1...` | `smartcv-auth.auth.ap-southeast-1...` |
+| Lambda prefix | `SmartCV-*` | `smartcv-*` |
 | Bedrock model | `amazon.nova-lite-v1:0` | `anthropic.claude-3-haiku-20240307-v1:0` |
-| Owner email | `hardikjparmar7@gmail.com` | `huynhnhandn68@gmail.com` |
-| GitHub Pages | `hardikjp7.github.io/applytic` | `huynhnhan68.github.io/smartcv` |
+| Owner email | `huynhnhan687@gmail.com` | `huynhnhandn68@gmail.com` |
+| GitHub Pages | `huynhnhan68.github.io/SmartCV` | `huynhnhan68.github.io/smartcv` |
 | Region | `us-east-1` | `ap-southeast-1` |
 
 ---
@@ -240,3 +240,6 @@ Monitoring:
 ---
 
 *Tài liệu tạo ngày 30/06/2026 trong quá trình setup SmartCV*
+
+
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Integration tests for Applications Lambda - v1.3
 Uses moto to mock DynamoDB - tests real handler-to-database interactions.
 Fix: patches module-level `table` inside each mock_aws() context so moto intercepts calls.
@@ -129,7 +129,7 @@ def make_event(method='GET', path='/applications', path_params=None, body=None, 
 
 def create_dynamodb_table(dynamodb_resource):
     return dynamodb_resource.create_table(
-        TableName='applytic',
+        TableName='SmartCV',
         KeySchema=[
             {'AttributeName': 'PK', 'KeyType': 'HASH'},
             {'AttributeName': 'SK', 'KeyType': 'RANGE'},
@@ -404,3 +404,4 @@ class TestDeleteApplicationIntegration:
                 items, count = list_applications(USER_ID)
                 assert count == 0
                 assert all(a['appId'] != app_id for a in items)
+

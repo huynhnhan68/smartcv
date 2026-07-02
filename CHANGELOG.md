@@ -1,6 +1,6 @@
-# Changelog
+﻿# Changelog
 
-All notable changes to Applytic are documented here.
+All notable changes to SmartCV are documented here.
 
 ---
 
@@ -13,9 +13,9 @@ All notable changes to Applytic are documented here.
 - CSV export - client-side, no Lambda, downloads all applications instantly
 - CSV import - full validation, preview, error reporting, template download
 - Follow-up badge on kanban cards - amber pill when overdue
-- `applytic-followup` Lambda - daily 9am UTC EventBridge trigger
-- `applytic-settings` Lambda - GET/PUT `/users/settings`, streak computed over 8-week window
-- `applytic-notes` Lambda - GET/POST/DELETE `/applications/{appId}/notes`
+- `SmartCV-followup` Lambda - daily 9am UTC EventBridge trigger
+- `SmartCV-settings` Lambda - GET/PUT `/users/settings`, streak computed over 8-week window
+- `SmartCV-notes` Lambda - GET/POST/DELETE `/applications/{appId}/notes`
 - `followUpDate` field on Application entity (nullable, YYYY-MM-DD)
 - `USER_SETTINGS` DynamoDB entity
 - `NOTE` DynamoDB entity
@@ -25,7 +25,7 @@ All notable changes to Applytic are documented here.
 ### Infrastructure
 - 3 new Lambda functions (ARM64, Python 3.12, X-Ray, shared layer)
 - 5 new API Gateway routes
-- Daily EventBridge rule `applytic-daily-followup`
+- Daily EventBridge rule `SmartCV-daily-followup`
 - CloudWatch alarm for followup Lambda errors
 
 ---
@@ -50,14 +50,14 @@ All notable changes to Applytic are documented here.
 ## [1.2.0] - 2026-04-20
 
 ### Added
-- Lambda Layer (`applytic-shared`) - shared middleware, Pydantic v2, X-Ray SDK, aws-lambda-powertools
+- Lambda Layer (`SmartCV-shared`) - shared middleware, Pydantic v2, X-Ray SDK, aws-lambda-powertools
 - Shared middleware module - single source of truth for resp(), auth extraction, CORS, correlation IDs
 - Pydantic request validation on all Lambda routes
 - AWS X-Ray tracing on all 4 Lambdas + API Gateway
 - Structured logging via aws-lambda-powertools
-- CloudWatch dashboard (`applytic-overview`)
+- CloudWatch dashboard (`SmartCV-overview`)
 - Cognito Post Confirmation trigger - auto-verifies new user emails in SES sandbox
-- `applytic-cognito-verify` Lambda
+- `SmartCV-cognito-verify` Lambda
 
 ### Fixed
 - Lambda ARM64 vs x86_64 architecture mismatch - build_layer.sh now uses `--platform manylinux2014_aarch64`
@@ -99,3 +99,4 @@ All notable changes to Applytic are documented here.
 - 48 pytest unit tests
 - GitHub Actions CI/CD with OIDC
 - AWS CDK v2 TypeScript infrastructure
+

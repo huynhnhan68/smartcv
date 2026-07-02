@@ -1,5 +1,5 @@
-"""
-Applytic — Seed Data Script
+﻿"""
+SmartCV — Seed Data Script
 Populates DynamoDB with realistic job applications for demo purposes.
 
 Usage:
@@ -7,7 +7,7 @@ Usage:
     python seed_data.py --user-id YOUR_COGNITO_SUB
 
 To find your Cognito sub (user ID):
-    - Sign in to your Applytic app
+    - Sign in to your SmartCV app
     - Open browser DevTools → Application → Local Storage
     - Look for the CognitoIdentityServiceProvider key, find the key ending in .userData
     - The "sub" field is your user ID
@@ -20,7 +20,7 @@ import json
 from datetime import datetime, timezone, timedelta
 from random import choice, randint, uniform
 
-TABLE_NAME = 'applytic'
+TABLE_NAME = 'SmartCV'
 REGION = 'us-east-1'
 
 dynamodb = boto3.resource('dynamodb', region_name=REGION)
@@ -282,7 +282,7 @@ def clear(user_id: str):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Seed Applytic demo data')
+    parser = argparse.ArgumentParser(description='Seed SmartCV demo data')
     parser.add_argument('--user-id', required=True, help='Your Cognito sub (user ID)')
     parser.add_argument('--clear', action='store_true', help='Delete all seeded data instead')
     args = parser.parse_args()
@@ -291,3 +291,4 @@ if __name__ == '__main__':
         clear(args.user_id)
     else:
         seed(args.user_id)
+

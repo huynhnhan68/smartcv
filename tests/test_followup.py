@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit tests for Follow-up Lambda - v2.0
 Tests: get_overdue_followups, get_user_email, build_followup_email,
        send_followup_email, lambda_handler
@@ -189,7 +189,7 @@ class TestBuildFollowupEmail:
 
     def test_includes_board_link(self):
         html = build_followup_email(self._make_apps())
-        assert "applytic/board" in html
+        assert "SmartCV/board" in html
 
     def test_single_app_no_plural(self):
         apps = [make_app("app-1", "user-1", "Stripe", "applied", YESTERDAY)]
@@ -333,3 +333,4 @@ class TestFollowupLambdaHandler:
         mock_send.assert_not_called()
         body = json.loads(result["body"])
         assert body["sent"] == 0
+

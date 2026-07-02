@@ -1,5 +1,5 @@
-"""
-Shared pytest fixtures for Applytic Lambda tests.
+﻿"""
+Shared pytest fixtures for SmartCV Lambda tests.
 """
 import os
 import pytest
@@ -11,12 +11,12 @@ from datetime import datetime, timezone, timedelta
 os.environ.setdefault('AWS_DEFAULT_REGION', 'us-east-1')
 os.environ.setdefault('AWS_ACCESS_KEY_ID', 'test')
 os.environ.setdefault('AWS_SECRET_ACCESS_KEY', 'test')
-os.environ.setdefault('TABLE_NAME', 'applytic')
-os.environ.setdefault('RESUME_BUCKET', 'applytic-resumes-test')
+os.environ.setdefault('TABLE_NAME', 'SmartCV')
+os.environ.setdefault('RESUME_BUCKET', 'SmartCV-resumes-test')
 os.environ.setdefault('USER_POOL_ID', 'us-east-1_test')
 os.environ.setdefault('BEDROCK_MODEL_ID', 'amazon.nova-lite-v1:0')
 os.environ.setdefault('LOG_LEVEL', 'INFO')
-os.environ.setdefault('POWERTOOLS_SERVICE_NAME', 'applytic')
+os.environ.setdefault('POWERTOOLS_SERVICE_NAME', 'SmartCV')
 
 
 def make_event(method='GET', path='/applications', path_params=None, body=None, user_id='test-user-123'):
@@ -119,3 +119,4 @@ def sample_applications():
             'updatedAt': days_ago(35), 'entityType': 'APPLICATION',
         },
     ]
+
