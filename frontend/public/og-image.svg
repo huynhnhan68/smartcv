@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bg)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Logo circle -->
+  <rect x="80" y="200" width="72" height="72" rx="16" fill="#2563eb"/>
+  <text x="116" y="250" font-family="system-ui,sans-serif" font-size="42" font-weight="700" fill="white" text-anchor="middle">S</text>
+
+  <!-- App name -->
+  <text x="174" y="254" font-family="system-ui,sans-serif" font-size="48" font-weight="700" fill="white">SmartCV</text>
+
+  <!-- Tagline -->
+  <text x="80" y="330" font-family="system-ui,sans-serif" font-size="32" fill="#93c5fd" font-weight="500">AI-powered job application tracker</text>
+  <text x="80" y="376" font-family="system-ui,sans-serif" font-size="32" fill="#93c5fd" font-weight="500">that learns from your rejections.</text>
+
+  <!-- Feature pills -->
+  <rect x="80" y="440" width="220" height="48" rx="24" fill="#3b82f6" fill-opacity="0.2"/>
+  <text x="190" y="470" font-family="system-ui,sans-serif" font-size="18" font-weight="600" fill="#bfdbfe" text-anchor="middle">Pattern Analysis</text>
+
+  <rect x="318" y="440" width="180" height="48" rx="24" fill="#3b82f6" fill-opacity="0.2"/>
+  <text x="408" y="470" font-family="system-ui,sans-serif" font-size="18" font-weight="600" fill="#bfdbfe" text-anchor="middle">AI Coaching</text>
+
+  <rect x="514" y="440" width="220" height="48" rx="24" fill="#3b82f6" fill-opacity="0.2"/>
+  <text x="624" y="470" font-family="system-ui,sans-serif" font-size="18" font-weight="600" fill="#bfdbfe" text-anchor="middle">Resume Tracking</text>
+
+  <rect x="750" y="440" width="200" height="48" rx="24" fill="#3b82f6" fill-opacity="0.2"/>
+  <text x="850" y="470" font-family="system-ui,sans-serif" font-size="18" font-weight="600" fill="#bfdbfe" text-anchor="middle">Built on AWS</text>
+
+</svg>

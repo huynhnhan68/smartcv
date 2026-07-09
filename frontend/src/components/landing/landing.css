@@ -1,0 +1,338 @@
+.land-grad-text {
+  background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 40%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: landGradShift 4s ease infinite;
+}
+
+@keyframes landGradShift {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Minimal glow behind hero */
+.land-hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Navbar scroll/hide */
+.land-nav {
+  transition: transform 0.35s ease, background 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+.land-nav-hidden {
+  transform: translateY(-100%);
+}
+
+.land-nav-scrolled {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Glass card (Linear style) */
+.land-glass {
+  background: rgba(10, 10, 10, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.land-glass:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(37, 99, 235, 0.1) inset;
+}
+
+/* Dashboard card */
+.land-dash-card {
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Bar grow animation */
+.land-bar {
+  display: inline-block;
+  background: linear-gradient(to top, #3b82f6, #60a5fa);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  animation: landWeekGrow 0.9s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes landWeekGrow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Pulse dot */
+.land-pulse {
+  animation: landPulseDot 2s ease-in-out infinite;
+}
+
+@keyframes landPulseDot {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+/* Float animations */
+.land-float {
+  animation: landFloat 5s ease-in-out infinite;
+}
+
+.land-float-2 {
+  animation: landFloat2 7s ease-in-out infinite;
+}
+
+@keyframes landFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(-1deg);
+  }
+}
+
+@keyframes landFloat2 {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(1.5deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+/* Spark line SVG animation */
+.land-spark {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: landSparkDraw 1.8s ease forwards 1s;
+}
+
+@keyframes landSparkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Scroll reveal */
+.land-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.land-reveal.slide-left {
+  transform: translateX(-32px);
+}
+
+.land-reveal.slide-right {
+  transform: translateX(32px);
+}
+
+.land-reveal.visible {
+  opacity: 1;
+  transform: translate(0);
+}
+
+/* Glow ring */
+.land-glow-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  animation: landRingPulse 3s ease-in-out infinite;
+}
+
+@keyframes landRingPulse {
+
+  0%,
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1.06) translate(-47%, -47%);
+    opacity: 0.6;
+  }
+}
+
+/* Gradient border wrapper */
+.land-grad-border {
+  position: relative;
+  border-radius: 12px;
+}
+
+.land-grad-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02) 50%, rgba(37, 99, 235, 0.2));
+  border-radius: 13px;
+  z-index: -1;
+}
+
+/* Tech marquee */
+.land-marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: landMarquee 22s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes landMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile menu */
+.land-mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.land-mobile-menu.open {
+  max-height: 400px;
+}
+
+/* FAQ accordion */
+.land-faq-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(.22, 1, .36, 1), padding 0.3s;
+}
+
+.land-faq-body.open {
+  max-height: 400px;
+  padding-bottom: 1rem;
+}
+
+.land-faq-icon {
+  transition: transform 0.35s ease;
+}
+
+.land-faq-icon.open {
+  transform: rotate(45deg);
+}
+
+
+
+/* Kanban status tags */
+.land-tag-applied {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.land-tag-interview {
+  background: rgba(34, 211, 238, 0.1);
+  color: #22d3ee;
+  border: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+.land-tag-offer {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.land-tag-rejected {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+/* Scrollbar */
+.land-page ::-webkit-scrollbar {
+  width: 5px;
+}
+
+.land-page ::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+.land-page ::-webkit-scrollbar-thumb {
+  background: #2563eb;
+  border-radius: 99px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.15s ease-out;
+}
+
+/* Custom scrollbar */
+.max-h-60::-webkit-scrollbar {
+  width: 4px;
+}
+
+.max-h-60::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.max-h-60::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 9999px;
+}
+
+.dark .max-h-60::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.max-h-60::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

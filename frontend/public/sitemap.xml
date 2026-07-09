@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- v2.3: trimmed to public landing page only.
+       App routes (/dashboard, /board, etc.) require auth and are excluded. -->
+  <url>
+    <loc>https://huynhnhan68.github.io/SmartCV</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

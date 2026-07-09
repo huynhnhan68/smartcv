@@ -1,0 +1,13 @@
+﻿User-agent: *
+Allow: /
+
+# App routes require authentication - no value in crawling them
+Disallow: /dashboard
+Disallow: /board
+Disallow: /analytics
+Disallow: /coach
+Disallow: /resumes
+Disallow: /auth/
+
+Sitemap: https://huynhnhan68.github.io/SmartCV/sitemap.xml
+
