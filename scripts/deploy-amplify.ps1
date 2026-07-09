@@ -3,7 +3,7 @@
 # Usage: .\scripts\deploy-amplify.ps1
 
 $APP_ID    = "d1s2bq5nqqwd9y"
-$BRANCH    = "main"
+$BRANCH    = "staging"
 $REGION    = "ap-southeast-1"
 $DIST_PATH = (Resolve-Path "$PSScriptRoot\..\frontend\dist").Path
 $ZIP_PATH  = "$PSScriptRoot\..\frontend-dist.zip"

@@ -2,10 +2,6 @@ import { Amplify } from 'aws-amplify'
 import { fetchAuthSession } from 'aws-amplify/auth'
 import axios from 'axios'
 
-// SmartCV: OAuth config cho Google sign-in qua Cognito Hosted UI.
-// redirectSignIn / redirectSignOut nhận nhiều URLs — Amplify tự chọn
-// URL khớp với window.location.origin tại runtime.
-// Hoạt động trên: localhost (dev), GitHub Pages, Amplify Hosting.
 Amplify.configure({
   Auth: {
     Cognito: {

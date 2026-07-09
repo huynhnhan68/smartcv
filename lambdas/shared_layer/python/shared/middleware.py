@@ -20,6 +20,8 @@ logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 ALLOWED_ORIGINS = [
     "https://huynhnhan68.github.io",
     "https://huynhnhan68.com",
+    "https://smartcvknight.click",
+    "https://www.smartcvknight.click",
     "http://localhost:5173",
     "http://localhost:5174",
 ]

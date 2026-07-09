@@ -14,7 +14,12 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from shared.middleware import now_iso
 
 dynamodb = boto3.resource("dynamodb")
-bedrock = boto3.client("bedrock-runtime")
+bedrock = boto3.client(
+    "bedrock-runtime",
+    region_name="us-east-1",
+    aws_access_key_id=os.environ.get("FRIEND_ACCESS_KEY", ""),
+    aws_secret_access_key=os.environ.get("FRIEND_SECRET_KEY", "")
+)
 ses = boto3.client("ses")
 
 TABLE_NAME = os.environ["TABLE_NAME"]

@@ -239,7 +239,13 @@ def get_upload_url(user_id: str, body: dict, event: dict) -> dict:
     except Exception as e:
         return resp(400, {"error": f"Validation error: {e}"}, event)
 
-    s3_key = f"resumes/{user_id}/{req.versionName}/{req.filename}"
+    import unicodedata
+    import re
+    # Sanitize filename: remove accents, replace spaces/special chars with underscores
+    safe_filename = unicodedata.normalize('NFKD', req.filename).encode('ASCII', 'ignore').decode('utf-8')
+    safe_filename = re.sub(r'[^\w\.-]', '_', safe_filename)
+
+    s3_key = f"resumes/{user_id}/{req.versionName}/{safe_filename}"
     logger.info("Generating presigned upload URL", extra={"s3_key": s3_key, "bucket": RESUME_BUCKET})
     url = s3_client.generate_presigned_url(
         "put_object",

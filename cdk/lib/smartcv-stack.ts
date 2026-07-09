@@ -79,6 +79,9 @@ export class SmartCVStack extends cdk.Stack {
     const githubPagesApp = `${githubPagesDomain}/${GITHUB_REPO}`;
     const cloudfrontDomain = `https://dummydomain.cloudfront.net`;
 
+    const customDomain = `https://smartcvknight.click`;
+    const customDomainWww = `https://www.smartcvknight.click`;
+
     // ─── Cognito User Pool ────────────────────────────────────────────────────
     const userPool = new cognito.UserPool(this, 'UserPool', {
       userPoolName: `${APP_NAME}-users`,
@@ -127,20 +130,24 @@ export class SmartCVStack extends cdk.Stack {
           cognito.OAuthScope.PROFILE,
         ],
         callbackUrls: [
+          `${customDomain}/auth/callback`,
+          `${customDomainWww}/auth/callback`,
           `${cloudfrontDomain}/auth/callback`,
           `${githubPagesApp}/auth/callback`,
           `${amplifyDomain}/auth/callback`,
+          `https://staging.${AMPLIFY_APP_ID}.amplifyapp.com/auth/callback`,
           'http://localhost:5173/auth/callback',
-          cloudfrontDomain,
-          githubPagesApp,
-          amplifyDomain,
-          'http://localhost:5173',
+          'http://localhost:5174/auth/callback',
         ],
         logoutUrls: [
+          `${customDomain}/`,
+          `${customDomainWww}/`,
           `${cloudfrontDomain}/`,
           `${githubPagesApp}/`,
           `${amplifyDomain}/`,
+          `https://staging.${AMPLIFY_APP_ID}.amplifyapp.com/`,
           'http://localhost:5173/',
+          'http://localhost:5174/',
         ],
       },
       supportedIdentityProviders: [
@@ -171,6 +178,8 @@ export class SmartCVStack extends cdk.Stack {
       POWERTOOLS_SERVICE_NAME: APP_NAME,
       LOG_LEVEL: 'INFO',
       AWS_XRAY_TRACING_NAME: APP_NAME,
+      FRIEND_ACCESS_KEY: process.env.FRIEND_ACCESS_KEY || '',
+      FRIEND_SECRET_KEY: process.env.FRIEND_SECRET_KEY || '',
     };
 
     const runtime = lambda.Runtime.PYTHON_3_12;
@@ -452,7 +461,11 @@ export class SmartCVStack extends cdk.Stack {
           'http://localhost:5174',
           githubPagesDomain,
           githubPagesApp,
-          amplifyDomain
+          amplifyDomain,
+          customDomain,
+          customDomainWww,
+          `https://staging.${AMPLIFY_APP_ID}.amplifyapp.com`,
+          `https://main.${AMPLIFY_APP_ID}.amplifyapp.com`
         ],
         allowMethods: apigateway.Cors.ALL_METHODS,
         allowHeaders: ['Content-Type', 'Authorization'],

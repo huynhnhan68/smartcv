@@ -124,7 +124,7 @@ All routes protected by Cognito JWT authorizer.
 | AI / ML | Amazon Bedrock - Amazon Nova Lite |
 | Database | DynamoDB - single-table design, PAY_PER_REQUEST |
 | Storage | S3 - resume versioning |
-| Hosting | AWS Amplify / GitHub Pages |
+| Hosting | AWS Amplify / GitHub Pages /route 53|
 | Scheduling | EventBridge cron |
 | Email | Amazon SES |
 | IaC | AWS CDK v2 TypeScript |

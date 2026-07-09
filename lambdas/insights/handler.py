@@ -22,7 +22,12 @@ from shared.middleware import resp, get_user_id, parse_body, now_iso
 
 dynamodb = boto3.resource("dynamodb")
 # Converse API hỗ trợ tất cả Bedrock models (Amazon Nova, Anthropic, etc.)
-bedrock = boto3.client("bedrock-runtime", region_name="ap-southeast-1")
+bedrock = boto3.client(
+    "bedrock-runtime", 
+    region_name="us-east-1",
+    aws_access_key_id=os.environ.get("FRIEND_ACCESS_KEY", ""),
+    aws_secret_access_key=os.environ.get("FRIEND_SECRET_KEY", "")
+)
 
 TABLE_NAME = os.environ["TABLE_NAME"]
 MODEL_ID = os.environ["BEDROCK_MODEL_ID"]
@@ -423,56 +428,83 @@ def _rule_based_coach(user_message: str, context: str) -> str:
         if "interview" in line.lower(): interview_count += 1
 
     # Chọn advice phù hợp dựa trên câu hỏi
-    if any(k in msg for k in ["resume", "cv", "version"]):
+    if any(k in msg for k in ["resume", "cv", "version", "portfolio"]):
         if total > 0 and response_rate < 20:
-            return (f"Your response rate is {response_rate:.0f}% — below the 20% benchmark. "
-                    "This suggests your resume may need targeted keyword optimization for ATS systems. "
-                    "Try tailoring your resume to each job description, focusing on matching 70%+ of the required skills. "
-                    "Consider A/B testing resume versions by tracking which version gets more responses in analytics.")
-        return ("Track which resume version gets the most responses in the Analytics section. "
-                "Use consistent version names when logging applications so you can compare conversion rates.")
+            return (
+                f"📊 **Data Insight:** Your current response rate is {response_rate:.1f}%, which is below the industry benchmark of 20%.\n\n"
+                "💡 **Strategic Advice for Resume Optimization:**\n"
+                "- **Targeted Keywords:** ATS systems heavily weigh exact keyword matches. Ensure your resume incorporates 70%+ of the core skills listed in the job description.\n"
+                "- **Impact-Driven Bullet Points:** Shift from task-based descriptions to outcome-based achievements (e.g., 'Increased revenue by X% using Y').\n"
+                "- **A/B Testing:** Create 2 distinct versions of your resume and track which one yields a higher conversion rate in your SmartCV Analytics."
+            )
+        return (
+            "💡 **Resume Strategy:**\n"
+            "- Track which resume version generates the highest response rate in your Analytics tab.\n"
+            "- Maintain consistent version naming conventions to accurately measure conversion effectiveness over time."
+        )
 
-    if any(k in msg for k in ["rejection", "rejected", "fail"]):
-        return (f"With {rejection_count} rejections in your data, focus on quality over quantity. "
-                "Analyze which companies and roles rejected you — look for patterns in company size or role level. "
-                "If rejections happen at application stage, optimize your resume. "
-                "If rejections happen after interviews, focus on interview preparation.")
+    if any(k in msg for k in ["rejection", "rejected", "fail", "ghosted"]):
+        return (
+            f"📊 **Data Insight:** You have logged {rejection_count} rejections out of {total} total applications.\n\n"
+            "💡 **Strategic Advice for Handling Rejections:**\n"
+            "- **Pipeline Analysis:** Identify where the drop-off occurs. If rejections happen immediately after applying, focus on ATS optimization. If they occur after interviews, refine your behavioral responses.\n"
+            "- **Pattern Recognition:** Review your Analytics to see if certain company sizes, industries, or roles reject you more often. Pivot your strategy toward segments with higher historical success.\n"
+            "- **Quality over Quantity:** A highly tailored application to 5 companies is far more effective than generic applications to 50."
+        )
 
-    if any(k in msg for k in ["interview", "interview rate", "screen"]):
+    if any(k in msg for k in ["interview", "interview rate", "screen", "prepare"]):
         if interview_count == 0:
-            return ("No interviews yet — focus on getting past the initial screening. "
-                    "Ensure your resume has strong keywords matching job descriptions. "
-                    "LinkedIn connections and referrals have 3-4x higher interview rates than cold applications.")
-        return (f"You have {interview_count} interview(s). "
-                "Prepare a strong STAR-method response library. "
-                "Research each company's culture, recent news, and tech stack before interviews.")
+            return (
+                "📊 **Data Insight:** You currently have 0 interviews logged.\n\n"
+                "💡 **Strategic Advice for Securing Interviews:**\n"
+                "- **Bypass the ATS:** Cold applications have the lowest success rate. Leverage LinkedIn to connect with recruiters or employees at target companies.\n"
+                "- **Referral Network:** Employee referrals boast a 3-4x higher interview conversion rate. Prioritize networking over blind applying.\n"
+                "- **Portfolio Enhancement:** Ensure your GitHub, personal site, or portfolio clearly demonstrates practical expertise."
+            )
+        return (
+            f"📊 **Data Insight:** You have successfully secured {interview_count} interview(s)!\n\n"
+            "💡 **Interview Preparation Strategy:**\n"
+            "- **The STAR Method:** Prepare a robust library of behavioral stories (Situation, Task, Action, Result) mapped to common leadership principles.\n"
+            "- **Deep Research:** Understand the company's recent earnings, core tech stack, and cultural values to ask highly targeted questions at the end of your interview.\n"
+            "- **Mock Interviews:** Practice your technical and behavioral responses out loud to build confidence and fluency."
+        )
 
     if any(k in msg for k in ["source", "channel", "where", "linkedin", "referral"]):
-        return ("Referrals typically yield 3-4x higher conversion rates than job boards. "
-                "Look at your Analytics to see which source has the best response rate. "
-                "Prioritize the channel that's working best for you.")
+        return (
+            "💡 **Application Channel Strategy:**\n"
+            "- **Referrals:** Historically the highest converting channel. Always seek a warm introduction before applying directly.\n"
+            "- **Direct Company Sites:** Often prioritized over third-party job boards like Indeed or generic LinkedIn Easy Apply.\n"
+            "- **Analytics Check:** Regularly review your SmartCV Analytics to double down on the specific channel that yields your highest response rate."
+        )
 
-    if any(k in msg for k in ["strategy", "improve", "better", "tweak", "advice", "tip"]):
+    if any(k in msg for k in ["strategy", "improve", "better", "tweak", "advice", "tip", "help"]):
         if total == 0:
-            return "Start logging applications to get personalized advice based on your actual data."
-        advice = []
+            return "📌 **Action Required:** Please log your job applications first. I need actual data to provide you with personalized, highly targeted coaching."
+        
+        advice = [f"📊 **Current Pipeline Health:** {total} applications | {response_rate:.1f}% response rate | {interview_count} interviews.\n", "💡 **Actionable Strategy:**"]
+        
         if response_rate < 15:
-            advice.append(f"Your {response_rate:.0f}% response rate is low — focus on resume quality and keyword matching.")
-        if interview_count == 0 and total > 5:
-            advice.append("No interviews after 5+ applications — consider targeting roles that better match your experience level.")
-        if total > 0:
-            advice.append(f"With {total} applications logged, keep the momentum going. Aim for 5-10 quality applications per week.")
-        return " ".join(advice) if advice else (
-            f"You've applied to {total} positions with a {response_rate:.0f}% response rate. "
-            "Focus on quality over quantity — tailor each application to the specific role.")
+            advice.append("- **Top of Funnel Issue:** Your response rate is low. Pause bulk applying and focus entirely on hyper-tailoring your resume to match specific job descriptions.")
+        elif interview_count == 0 and total > 10:
+            advice.append("- **Market Misalignment:** No interviews after 10+ applications suggests a mismatch. Consider targeting roles more aligned with your current seniority level or highlighting transferable skills better.")
+        else:
+            advice.append("- **Momentum:** You are seeing traction. Maintain a steady cadence of 5-10 high-quality, tailored applications per week rather than sporadic bursts.")
+            
+        return "\n".join(advice)
 
     # Default response dựa trên data thực tế
     if total > 0:
-        return (f"Based on your {total} applications ({response_rate:.0f}% response rate): "
-                "Focus on the roles and companies where you get the most traction. "
-                "Check your Analytics tab for detailed patterns on what's working.")
-    return ("Log your applications consistently to unlock personalized AI coaching advice. "
-            "Once you have 3+ entries, I can analyze your patterns and provide specific recommendations.")
+        return (
+            f"📊 **Summary:** Based on your {total} applications, your response rate is {response_rate:.1f}%.\n\n"
+            "💡 **Next Steps:**\n"
+            "- Continuously monitor your Analytics tab to identify macro trends.\n"
+            "- Focus your energy on the specific roles, industries, and application channels where you have demonstrated the most traction."
+        )
+    return (
+        "👋 **Welcome to SmartCV AI Coaching!**\n\n"
+        "To unlock personalized, data-driven career advice, please begin logging your job applications consistently. "
+        "Once you have a baseline of data, I will analyze your pipeline patterns and provide targeted recommendations to improve your conversion rates."
+    )
 
 
 @logger.inject_lambda_context(correlation_id_path="requestContext.requestId")
