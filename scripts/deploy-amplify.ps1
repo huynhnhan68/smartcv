@@ -5,7 +5,7 @@
 $APP_ID    = "d1s2bq5nqqwd9y"
 $BRANCH    = "main"
 $REGION    = "ap-southeast-1"
-$DIST_PATH = "$PSScriptRoot\..\frontend\dist"
+$DIST_PATH = (Resolve-Path "$PSScriptRoot\..\frontend\dist").Path
 $ZIP_PATH  = "$PSScriptRoot\..\frontend-dist.zip"
 
 Write-Host "📦 Building frontend..." -ForegroundColor Cyan
