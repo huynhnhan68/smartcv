@@ -1,10 +1,10 @@
-﻿// Terms of Service page - linked from footer and signup form, public route.
+// Terms of Service page - linked from footer and signup form, public route.
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-10">
       <h2 className="text-xl font-semibold text-white mb-3"
-          style={{ fontFamily: 'Syne, sans-serif' }}>
+        style={{ fontFamily: 'Syne, sans-serif' }}>
         {title}
       </h2>
       <div className="space-y-3 text-gray-400 text-sm leading-relaxed">
@@ -21,10 +21,10 @@ export default function Terms() {
       <div className="border-b border-white/5 px-6 py-4">
         <a href="/" className="flex items-center gap-2.5 w-fit">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-               style={{ background: '#534ab7' }}>
-            <span className="text-white font-bold text-sm leading-none">A</span>
+            style={{ background: '#2563eb' }}>
+            <span className="text-white font-bold text-sm leading-none">S</span>
           </div>
-          <span className="text-white font-semibold" style={{ fontFamily: 'Syne, sans-serif' }}>
+          <span className="text-white font-semibold tracking-tight">
             smartcv
           </span>
         </a>
@@ -32,11 +32,10 @@ export default function Terms() {
 
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-white mb-3"
-              style={{ fontFamily: 'Syne, sans-serif' }}>
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
             Terms of Service
           </h1>
-          <p className="text-gray-500 text-sm">Last updated: June 2026</p>
+          <p className="text-gray-500 text-sm">Last updated: 2026</p>
         </div>
 
         <Section title="About smartcv">
@@ -92,7 +91,7 @@ export default function Terms() {
             <li>Use the AI Coach to generate harmful, abusive, or illegal content.</li>
             <li>Attempt to access other users' data.</li>
             <li>Scrape or automate requests to the API in ways that place unreasonable load on
-            the service.</li>
+              the service.</li>
           </ul>
         </Section>
 
@@ -100,7 +99,7 @@ export default function Terms() {
           <p>
             smartcv's source code is available on{' '}
             <a href="https://github.com/huynhnhan68/smartcv" target="_blank" rel="noreferrer"
-               className="text-indigo-400 hover:text-indigo-300 transition-colors">
+              className="text-indigo-400 hover:text-indigo-300 transition-colors">
               GitHub
             </a>
             {' '}under the Apache 2.0 licence. You are free to self-host, fork, and modify
@@ -138,7 +137,7 @@ export default function Terms() {
           <p>
             Questions about these terms:{' '}
             <a href="https://github.com/huynhnhan68" target="_blank" rel="noreferrer"
-               className="text-indigo-400 hover:text-indigo-300 transition-colors">
+              className="text-indigo-400 hover:text-indigo-300 transition-colors">
               github.com/huynhnhan68
             </a>
           </p>

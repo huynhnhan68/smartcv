@@ -30,11 +30,10 @@ export default function ApplicationDetailModal({ app, onClose, onSave, onDelete,
     jobDescUrl: app.jobDescUrl,
     notes: app.notes,
     dateApplied: app.dateApplied,
-    followUpDate: app.followUpDate ?? '',   // Bug 1 fix: add followUpDate to form
+    followUpDate: app.followUpDate ?? '',
   })
   const [noteInput, setNoteInput] = useState('')
 
-  // Bug 2 fix: use notes timeline hook (v2.1: React Query backed)
   const { notes, loading: notesLoading, submitting, addNote, removeNote } = useNotes(app.appId)
 
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
@@ -148,7 +147,7 @@ export default function ApplicationDetailModal({ app, onClose, onSave, onDelete,
                 : <p className="text-sm text-gray-400">-</p>}
           </Field>
 
-          {/* Bug 1 fix: Follow-up date field */}
+
           <Field label="Follow-up date" dark>
             {editing ? (
               <div className="space-y-1">
@@ -179,7 +178,7 @@ export default function ApplicationDetailModal({ app, onClose, onSave, onDelete,
               : <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{app.notes || '-'}</p>}
           </Field>
 
-          {/* Bug 2 fix: Notes timeline */}
+
           <div>
             <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
               <MessageSquare size={11} /> Notes timeline

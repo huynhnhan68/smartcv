@@ -1,5 +1,5 @@
 """
-Unit tests for Cognito Post Confirmation Lambda - v1.3
+Unit tests for Cognito Post Confirmation Lambda
 Run: python -m pytest tests/test_cognito_verify.py -v
 """
 import sys

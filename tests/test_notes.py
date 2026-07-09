@@ -1,5 +1,5 @@
 """
-Unit tests for Notes Lambda - v2.0
+Unit tests for Notes Lambda
 Tests: verify_application_owner, list_notes, create_note,
        delete_note, lambda_handler
 Run: python -m pytest tests/test_notes.py -v

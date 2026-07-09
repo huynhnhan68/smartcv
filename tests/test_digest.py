@@ -1,5 +1,5 @@
 """
-Unit tests for Digest Lambda - v1.3
+Unit tests for Digest Lambda
 Fix: _FakeLogger.inject_lambda_context now handles both
      @logger.inject_lambda_context (no parens - fn passed directly)
      @logger.inject_lambda_context(...) (with parens - returns decorator)
@@ -355,7 +355,7 @@ class TestDigestLambdaHandler:
              patch('digest_handler.generate_weekly_tip', return_value='Great tip.'), \
              patch('digest_handler.send_digest'), \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = self._make_cognito()
             result = lambda_handler({}, None)
         assert result['statusCode'] == 200
@@ -367,7 +367,7 @@ class TestDigestLambdaHandler:
              patch('digest_handler.generate_weekly_tip', return_value='tip'), \
              patch('digest_handler.send_digest'), \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = self._make_cognito()
             result = lambda_handler({}, None)
         body = json.loads(result['body'])
@@ -378,7 +378,7 @@ class TestDigestLambdaHandler:
              patch('digest_handler.get_user_apps', return_value=[]), \
              patch('digest_handler.send_digest') as mock_send, \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = self._make_cognito()
             result = lambda_handler({}, None)
         mock_send.assert_not_called()
@@ -392,7 +392,7 @@ class TestDigestLambdaHandler:
              patch('digest_handler.get_user_apps', return_value=SAMPLE_APPS), \
              patch('digest_handler.send_digest') as mock_send, \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = mock_cognito
             lambda_handler({}, None)
         mock_send.assert_not_called()
@@ -409,7 +409,7 @@ class TestDigestLambdaHandler:
              patch('digest_handler.generate_weekly_tip', return_value='tip'), \
              patch('digest_handler.send_digest'), \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = mock_cognito
             result = lambda_handler({}, None)
         body = json.loads(result['body'])
@@ -419,7 +419,7 @@ class TestDigestLambdaHandler:
     def test_handler_returns_200_even_with_no_active_users(self):
         with patch('digest_handler.get_active_users', return_value=[]), \
              patch('digest_handler.boto3') as mock_boto3, \
-             patch.dict(os.environ, {'USER_POOL_ID': 'us-east-1_test'}):
+             patch.dict(os.environ, {'USER_POOL_ID': 'ap-southeast-1_test'}):
             mock_boto3.client.return_value = MagicMock()
             result = lambda_handler({}, None)
         assert result['statusCode'] == 200

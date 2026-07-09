@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import {
   signIn,
@@ -31,7 +31,7 @@ const primaryBtn =
   'hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] ' +
   'disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100'
 
-const primaryStyle = { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }
+const primaryStyle = { background: 'linear-gradient(135deg, #3b82f6, #38bdf8)' }
 
 // Google SVG mark (official brand colors, no license issues for auth button)
 function GoogleMark() {
@@ -236,11 +236,10 @@ export default function AuthModal({ initialView = 'login', isModal = false }: Pr
         {/* Logo */}
         <div className="flex items-center gap-2.5 mb-8">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-               style={{ background: '#534ab7' }}>
-            <span className="text-white font-bold text-base leading-none">A</span>
+               style={{ background: '#2563eb' }}>
+            <span className="text-white font-bold text-base leading-none">S</span>
           </div>
-          <span className="text-white font-semibold text-lg"
-                style={{ fontFamily: 'Syne, sans-serif' }}>
+          <span className="text-white font-semibold text-lg tracking-tight">
             smartcv
           </span>
         </div>

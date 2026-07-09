@@ -1,4 +1,4 @@
-﻿"""
+"""
 Integration tests for Insights Lambda - v1.3
 Uses moto to mock DynamoDB - tests real handler-to-database interactions.
 Fix: patches module-level `table` inside each mock_aws() context so moto intercepts calls.
@@ -16,7 +16,6 @@ from datetime import datetime, timezone, timedelta
 import boto3
 from moto import mock_aws
 
-# ── Stubs ─────────────────────────────────────────────────────────────────────
 
 class _FakeLogger:
     def __init__(self, *a, **kw): pass
@@ -96,7 +95,7 @@ if "shared" not in sys.modules:
     sys.modules["shared"] = shared_pkg
     sys.modules["shared.middleware"] = shared_mw
 
-# ── Load handler ──────────────────────────────────────────────────────────────
+# ���� Load handler ����������������������������������������������������������������������������������������������������������������������������
 _handler_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', 'lambdas', 'insights', 'handler.py')
 )
@@ -110,7 +109,7 @@ check_rate_limit = _mod.check_rate_limit
 lambda_handler = _mod.lambda_handler
 CHAT_DAILY_LIMIT = _mod.CHAT_DAILY_LIMIT
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ���� Helpers ��������������������������������������������������������������������������������������������������������������������������������������
 
 USER_ID = 'insights-int-user'
 
@@ -179,13 +178,13 @@ def seed_application(table, user_id, app_id, company, status, source='linkedin',
     })
 
 
-# ── Tests: fetch_all_applications ─────────────────────────────────────────────
+# ���� Tests: fetch_all_applications ������������������������������������������������������������������������������������������
 
 class TestFetchAllApplicationsIntegration:
 
     def test_returns_applications_for_user(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             seed_application(table, USER_ID, 'app-1', 'Stripe', 'offer', source='referral')
             seed_application(table, USER_ID, 'app-2', 'Google', 'rejected', source='linkedin')
@@ -195,7 +194,7 @@ class TestFetchAllApplicationsIntegration:
 
     def test_returns_empty_for_user_with_no_apps(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 apps = fetch_all_applications('empty-user')
@@ -203,7 +202,7 @@ class TestFetchAllApplicationsIntegration:
 
     def test_only_returns_application_entities(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             seed_application(table, USER_ID, 'app-1', 'Stripe', 'applied')
             # Insert a rate limit record - should NOT be returned
@@ -222,7 +221,7 @@ class TestFetchAllApplicationsIntegration:
 
     def test_isolates_by_user_id(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             seed_application(table, USER_ID, 'app-1', 'MyCompany', 'applied')
             seed_application(table, 'other-user', 'app-2', 'TheirCompany', 'applied')
@@ -233,7 +232,7 @@ class TestFetchAllApplicationsIntegration:
 
     def test_returns_all_statuses(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             for i, status in enumerate(['applied', 'screened', 'interview', 'offer', 'rejected', 'withdrawn']):
                 seed_application(table, USER_ID, f'app-{i}', f'Co{i}', status)
@@ -244,13 +243,13 @@ class TestFetchAllApplicationsIntegration:
             assert statuses == {'applied', 'screened', 'interview', 'offer', 'rejected', 'withdrawn'}
 
 
-# ── Tests: check_rate_limit ───────────────────────────────────────────────────
+# ���� Tests: check_rate_limit ������������������������������������������������������������������������������������������������������
 
 class TestRateLimitIntegration:
 
     def test_first_request_is_allowed(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 allowed, remaining = check_rate_limit(USER_ID)
@@ -260,7 +259,7 @@ class TestRateLimitIntegration:
 
     def test_counter_increments_on_each_call(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 check_rate_limit(USER_ID)
@@ -271,7 +270,7 @@ class TestRateLimitIntegration:
 
     def test_rate_limit_blocks_after_limit_exceeded(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 for _ in range(20):
@@ -283,7 +282,7 @@ class TestRateLimitIntegration:
 
     def test_rate_limit_is_per_user(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 for _ in range(20):
@@ -294,7 +293,7 @@ class TestRateLimitIntegration:
 
     def test_rate_limit_record_has_ttl_set(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 check_rate_limit(USER_ID)
@@ -308,13 +307,13 @@ class TestRateLimitIntegration:
             assert abs(item['ttl'] - expected_ttl) < 60
 
 
-# ── Tests: lambda_handler ─────────────────────────────────────────────────────
+# ���� Tests: lambda_handler ����������������������������������������������������������������������������������������������������������
 
 class TestInsightsHandlerIntegration:
 
     def test_get_insights_returns_patterns_from_real_data(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             seed_application(table, USER_ID, 'app-1', 'Stripe', 'offer', source='referral', resume='v3')
             seed_application(table, USER_ID, 'app-2', 'Google', 'rejected', source='linkedin', resume='v1')
@@ -328,7 +327,7 @@ class TestInsightsHandlerIntegration:
 
     def test_get_insights_response_rate_reflects_real_data(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             # 1 offer (responded), 1 rejected, 1 applied = 1/3 response rate
             seed_application(table, USER_ID, 'app-1', 'Stripe', 'offer')
@@ -342,7 +341,7 @@ class TestInsightsHandlerIntegration:
 
     def test_get_insights_empty_user_returns_message(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('insights_handler_int.table', table):
                 result = lambda_handler(make_event('GET', '/insights'), None)
@@ -352,7 +351,7 @@ class TestInsightsHandlerIntegration:
 
     def test_post_chat_insufficient_data_returns_guidance(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             seed_application(table, USER_ID, 'app-1', 'Stripe', 'applied')
             seed_application(table, USER_ID, 'app-2', 'Google', 'applied')
@@ -368,7 +367,7 @@ class TestInsightsHandlerIntegration:
 
     def test_post_chat_rate_limited_returns_429(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             for i in range(5):
                 seed_application(table, USER_ID, f'app-{i}', f'Co{i}', 'offer')

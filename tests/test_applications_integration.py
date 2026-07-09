@@ -1,4 +1,4 @@
-﻿"""
+"""
 Integration tests for Applications Lambda - v1.3
 Uses moto to mock DynamoDB - tests real handler-to-database interactions.
 Fix: patches module-level `table` inside each mock_aws() context so moto intercepts calls.
@@ -14,7 +14,6 @@ from unittest.mock import MagicMock, patch
 import boto3
 from moto import mock_aws
 
-# ── Stubs (must be set before handler is loaded) ──────────────────────────────
 
 class _FakeLogger:
     def __init__(self, *a, **kw): pass
@@ -95,7 +94,7 @@ if "shared" not in sys.modules:
     sys.modules["shared"] = shared_pkg
     sys.modules["shared.middleware"] = shared_mw
 
-# ── Load handler ──────────────────────────────────────────────────────────────
+# ���� Load handler ����������������������������������������������������������������������������������������������������������������������������
 _handler_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', 'lambdas', 'applications', 'handler.py')
 )
@@ -111,7 +110,7 @@ update_application = _mod.update_application
 delete_application = _mod.delete_application
 update_status = _mod.update_status
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ���� Helpers ��������������������������������������������������������������������������������������������������������������������������������������
 
 def make_event(method='GET', path='/applications', path_params=None, body=None, user_id='user-int-123'):
     return {
@@ -155,13 +154,13 @@ def create_dynamodb_table(dynamodb_resource):
 USER_ID = 'user-int-123'
 
 
-# ── Tests ─────────────────────────────────────────────────────────────────────
+# ���� Tests ������������������������������������������������������������������������������������������������������������������������������������������
 
 class TestCreateApplicationIntegration:
 
     def test_create_writes_application_item_to_dynamodb(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = create_application(USER_ID, {
@@ -176,7 +175,7 @@ class TestCreateApplicationIntegration:
 
     def test_create_writes_correct_gsi1_keys(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = create_application(USER_ID, {
@@ -189,7 +188,7 @@ class TestCreateApplicationIntegration:
 
     def test_create_writes_status_event_to_dynamodb(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = create_application(USER_ID, {
@@ -205,7 +204,7 @@ class TestCreateApplicationIntegration:
 
     def test_create_stores_all_optional_fields(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = create_application(USER_ID, {
@@ -222,7 +221,7 @@ class TestCreateApplicationIntegration:
 
     def test_create_sets_entity_type(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = create_application(USER_ID, {
@@ -237,7 +236,7 @@ class TestListApplicationsIntegration:
 
     def test_list_returns_applications_via_gsi1(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 create_application(USER_ID, {'company': 'A', 'role': 'SWE', 'status': 'applied'}, make_event())
@@ -249,7 +248,7 @@ class TestListApplicationsIntegration:
 
     def test_list_returns_empty_for_new_user(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 items, count = list_applications('new-user-999')
@@ -258,7 +257,7 @@ class TestListApplicationsIntegration:
 
     def test_list_isolates_by_user_id(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 create_application(USER_ID, {'company': 'MyCompany', 'role': 'SWE', 'status': 'applied'}, make_event())
@@ -272,7 +271,7 @@ class TestGetApplicationIntegration:
 
     def test_get_returns_correct_item(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -287,7 +286,7 @@ class TestGetApplicationIntegration:
 
     def test_get_returns_404_for_nonexistent(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 result = get_application(USER_ID, 'nonexistent-app-id', make_event())
@@ -298,7 +297,7 @@ class TestUpdateApplicationIntegration:
 
     def test_update_modifies_field_in_dynamodb(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -312,7 +311,7 @@ class TestUpdateApplicationIntegration:
 
     def test_update_changes_updated_at_timestamp(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -328,7 +327,7 @@ class TestUpdateStatusIntegration:
 
     def test_update_status_changes_status_in_dynamodb(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -342,7 +341,7 @@ class TestUpdateStatusIntegration:
 
     def test_update_status_writes_new_status_event(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -360,7 +359,7 @@ class TestUpdateStatusIntegration:
 
     def test_update_status_records_from_status_correctly(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -379,7 +378,7 @@ class TestDeleteApplicationIntegration:
 
     def test_delete_removes_item_from_dynamodb(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {
@@ -393,7 +392,7 @@ class TestDeleteApplicationIntegration:
 
     def test_delete_item_no_longer_in_list(self):
         with mock_aws():
-            dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+            dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
             table = create_dynamodb_table(dynamodb)
             with patch('applications_handler_int.table', table):
                 created = create_application(USER_ID, {

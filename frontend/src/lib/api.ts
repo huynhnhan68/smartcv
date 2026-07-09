@@ -64,6 +64,10 @@ export const listResumes = async (): Promise<{ versionName: string; filename: st
   return res.data.resumes
 }
 
+export const deleteResume = async (versionName: string): Promise<void> => {
+  await api.delete(`/resumes/${versionName}`)
+}
+
 // ── Insights ──────────────────────────────────────────────────────────────────
 
 export const getInsights = async (): Promise<Patterns> => {

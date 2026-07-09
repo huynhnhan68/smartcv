@@ -1,4 +1,4 @@
-﻿"""
+"""
 Shared pytest fixtures for SmartCV Lambda tests.
 """
 import os
@@ -8,12 +8,12 @@ from datetime import datetime, timezone, timedelta
 
 # Set env vars before any Lambda handler is imported —
 # boto3 reads these at module-level init time
-os.environ.setdefault('AWS_DEFAULT_REGION', 'us-east-1')
+os.environ.setdefault('AWS_DEFAULT_REGION', 'ap-southeast-1')
 os.environ.setdefault('AWS_ACCESS_KEY_ID', 'test')
 os.environ.setdefault('AWS_SECRET_ACCESS_KEY', 'test')
 os.environ.setdefault('TABLE_NAME', 'SmartCV')
 os.environ.setdefault('RESUME_BUCKET', 'SmartCV-resumes-test')
-os.environ.setdefault('USER_POOL_ID', 'us-east-1_test')
+os.environ.setdefault('USER_POOL_ID', 'ap-southeast-1_test')
 os.environ.setdefault('BEDROCK_MODEL_ID', 'amazon.nova-lite-v1:0')
 os.environ.setdefault('LOG_LEVEL', 'INFO')
 os.environ.setdefault('POWERTOOLS_SERVICE_NAME', 'SmartCV')

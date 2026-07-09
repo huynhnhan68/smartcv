@@ -1,8 +1,8 @@
 """
-Insights Lambda - v2.1
+Insights Lambda
 Handles: GET /insights  POST /insights/chat
 
-v2.1 additions to compute_patterns():
+ to compute_patterns():
   - funnel: applied -> screened -> interview -> offer counts + step conversion rates
   - responseRateTimeSeries: weekly response rate over last 8 ISO weeks
   - statusHistory: applications that moved INTO each status per ISO week (last 8 weeks)
@@ -75,7 +75,7 @@ def _parse_date(date_str: str) -> datetime | None:
         return None
 
 
-# ── v2.1: funnel ──────────────────────────────────────────────────────────────
+
 
 def _compute_funnel(apps: list) -> dict:
     """
@@ -124,7 +124,7 @@ def _compute_funnel(apps: list) -> dict:
     return {"stages": stages}
 
 
-# ── v2.1: response rate time series ──────────────────────────────────────────
+
 
 def _compute_response_rate_time_series(apps: list) -> list:
     """
@@ -180,7 +180,7 @@ def _compute_response_rate_time_series(apps: list) -> list:
     return result
 
 
-# ── v2.1: status history ──────────────────────────────────────────────────────
+
 
 def _compute_status_history(apps: list) -> list:
     """
@@ -349,7 +349,6 @@ def compute_patterns(apps: list) -> dict:
             "bestCompanySize": {"name": best_size[0], "responseRate": response_rate(best_size[1])} if best_size else None,
         },
         "velocity": {f"week_{i}_ago": weekly_counts.get(i, 0) for i in range(4)},
-        # v2.1 additions
         "funnel": _compute_funnel(apps),
         "responseRateTimeSeries": _compute_response_rate_time_series(apps),
         "statusHistory": _compute_status_history(apps),
@@ -388,7 +387,8 @@ def chat_with_coach(user_message: str, context: str) -> str:
     system_prompt = """You are a pragmatic, data-driven job search coach.
 Give specific, actionable advice based on what the data actually shows.
 Be direct and honest. Reference specific numbers and patterns.
-Keep responses under 250 words unless asked for more detail."""
+Keep responses under 250 words unless asked for more detail.
+IMPORTANT: You MUST respond in the exact same language as the user's question (e.g., if the user asks in Vietnamese, you must answer in Vietnamese)."""
 
     user_prompt = f"Here is my job search data:\n\n{context}\n\nMy question: {user_message}"
 

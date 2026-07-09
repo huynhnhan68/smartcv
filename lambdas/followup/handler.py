@@ -1,5 +1,5 @@
-﻿"""
-Follow-up Lambda - v2.0
+"""
+Follow-up Lambda
 Triggered daily by EventBridge at 9am UTC.
 Scans all active applications where:
   - status is 'applied' or 'screened'

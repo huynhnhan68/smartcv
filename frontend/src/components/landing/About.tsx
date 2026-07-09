@@ -1,6 +1,8 @@
-﻿import { useScrollReveal } from './useScrollReveal'
+import { useScrollReveal } from './useScrollReveal'
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function About() {
+  const { t } = useTranslation()
   useScrollReveal()
 
   return (
@@ -11,37 +13,30 @@ export default function About() {
             {/* Avatar / logo mark */}
             <div className="flex-shrink-0">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white"
-                   style={{ background: '#534ab7', fontFamily: 'Syne, sans-serif' }}>
+                   style={{ background: '#2563eb' }}>
                 H
               </div>
             </div>
 
             <div>
               <div className="land-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/5 text-xs text-indigo-400 mb-4">
-                Why I built this
+                {t('landing.about.badge')}
               </div>
 
-              <h2
-                className="text-3xl font-bold text-white mb-6"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                I was job hunting with no data on why I was getting rejected.
+              <h2 className="text-3xl font-bold text-white mb-6">
+                <div className="font-bold text-white text-xl tracking-tight mb-2">Huynh Nhan</div>
+                {t('landing.about.title')}
               </h2>
 
               <div className="space-y-4 text-gray-400 text-sm sm:text-base leading-relaxed">
                 <p>
-                  I had a spreadsheet with company names and "rejected" written next to most of them -
-                  but no signal on <em className="text-gray-300 not-italic">why</em>. Was it my resume? The channel? The company size?
+                  {t('landing.about.p1a')}<em className="text-gray-300 not-italic">{t('landing.about.p1why')}</em>{t('landing.about.p1b')}
                 </p>
                 <p>
-                  So I instrumented my own job search. Every application became a data point. After a few weeks
-                  I had enough data to see that my <code className="text-indigo-400 text-xs px-1.5 py-0.5 rounded bg-indigo-500/10">v1-generic</code> resume
-                  had a 0% response rate from enterprise companies, while <code className="text-indigo-400 text-xs px-1.5 py-0.5 rounded bg-indigo-500/10">v3-ml-focused</code> was
-                  getting interviews from startups via referrals. That's the kind of insight you can act on.
+                  {t('landing.about.p2')}
                 </p>
                 <p>
-                  I built smartcv for myself. Then I put it on AWS properly and opened it up.
-                  It's free to use - no trial, no card, no limits.
+                  {t('landing.about.p3')}
                 </p>
               </div>
 

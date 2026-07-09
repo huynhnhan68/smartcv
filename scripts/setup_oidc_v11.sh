@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # =============================================================================
 # SmartCV v1.1 — OIDC Role Setup Script
 # Run this ONCE manually before deploying v1.1.

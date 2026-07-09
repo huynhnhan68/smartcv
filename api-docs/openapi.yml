@@ -1,4 +1,4 @@
-﻿openapi: 3.0.3
+openapi: 3.0.3
 
 info:
   title: SmartCV API
@@ -19,8 +19,8 @@ info:
     url: https://github.com/huynhnhan68/SmartCV
 
 servers:
-  - url: https://mbjyu0w1k5.execute-api.us-east-1.amazonaws.com/v1
-    description: Production (AWS)
+  - url: https://YOUR_API_ID.execute-api.ap-southeast-1.amazonaws.com/v1
+    description: Production (AWS ap-southeast-1)
 
 security:
   - cognitoAuth: []
@@ -293,6 +293,37 @@ paths:
                 $ref: "#/components/schemas/Error"
 
   # ── Resumes ───────────────────────────────────────────────────────────────
+
+  /resumes/{versionName}:
+    delete:
+      summary: Delete an uploaded resume version
+      security:
+        - cognitoAuth: []
+      parameters:
+        - in: path
+          name: versionName
+          required: true
+          schema:
+            type: string
+          description: The name of the resume version to delete
+      responses:
+        '200':
+          description: Resume version deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Resume version not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /resumes/upload-url:
     post:

@@ -4,7 +4,7 @@ import Hero from '../components/landing/Hero'
 import LogoMarquee from '../components/landing/LogoMarquee'
 import FeatureShowcase from '../components/landing/FeatureShowcase'
 import HowItWorks from '../components/landing/HowItWorks'
-import DeepDive from '../components/landing/DeepDive'   // v2.3 update
+import DeepDive from '../components/landing/DeepDive'
 import About from '../components/landing/About'
 import FAQ from '../components/landing/FAQ'
 import CTABand from '../components/landing/CTABand'
@@ -13,12 +13,12 @@ import Footer from '../components/landing/Footer'
 export default function Landing() {
   return (
     <div
-      className="land-page land-noise relative"
+      className="land-page relative bg-grid-pattern"
       style={{
-        background: '#0a0a0f',
+        background: '#000',
         color: '#f9fafb',
         minHeight: '100vh',
-        fontFamily: 'DM Sans, system-ui, sans-serif',
+        fontFamily: 'Inter, system-ui, sans-serif',
       }}
     >
       <Navbar />

@@ -1,5 +1,5 @@
 """
-Unit tests for Settings Lambda - v2.0
+Unit tests for Settings Lambda
 Tests: get_settings, compute_streak, upsert_settings, lambda_handler
 Run: python -m pytest tests/test_settings.py -v
 """

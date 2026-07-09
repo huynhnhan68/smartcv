@@ -1,39 +1,34 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useScrollReveal } from './useScrollReveal'
-
-const FAQS = [
-  {
-    q: 'Is it actually free?',
-    a: 'Yes. No trial, no credit card, no usage limits. smartcv is hosted on AWS and I pay the bill myself. At low to moderate usage the AWS costs are a few dollars a month - well worth it to have a real production project running.',
-  },
-  {
-    q: 'How does the AI coaching work?',
-    a: 'When you open the AI Coach, your application data is pulled from DynamoDB and structured into a context window - response rates per source channel, per resume version, per company size, recent application history. That structured data is passed to Amazon Nova Lite on AWS Bedrock along with your question. The model gets hard numbers, not raw records, so the advice is specific to your situation rather than generic.',
-  },
-  {
-    q: 'What is the weekly digest?',
-    a: 'Every Monday at 8am UTC, a Lambda function scans for users who have had activity in the past week, generates a summary of your pipeline, and uses Amazon Nova Lite to write one personalised tip based on your patterns. It\'s delivered via Amazon SES. You need to verify your email address after signing up (a one-click link from AWS) to receive it - this is an SES sandbox requirement.',
-  },
-  {
-    q: 'Does it work with Google sign-in?',
-    a: 'Yes. You can sign up and log in with Google via Cognito\'s OAuth integration. Email/password also works. Both paths give you the same features including the weekly digest.',
-  },
-  {
-    q: 'Can I self-host this?',
-    a: 'Yes. The full source is on GitHub and CONTRIBUTING.md has step-by-step setup instructions. You need an AWS account, Node.js, Python 3.12, and the AWS CDK CLI. A full deploy from scratch takes under 3 minutes.',
-  },
-  {
-    q: 'What data do you store?',
-    a: 'Application data you enter (company, role, status, notes, dates), resume PDFs you upload to S3 (stored in your own bucket under your user ID prefix), and your email address from Cognito. Nothing is sold or shared. See the Privacy Policy for the full picture.',
-  },
-  {
-    q: 'How does the AI chat rate limiting work?',
-    a: 'Each user gets 20 AI Coach messages per day. The counter resets at midnight UTC and is stored in DynamoDB with a TTL so the record auto-expires after 2 days. This keeps Bedrock costs predictable at zero direct charge to users.',
-  },
-]
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function FAQ() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState<number | null>(null)
+  useScrollReveal()
+
+  const FAQS = [
+    {
+      q: t('landing.faq.q1'),
+      a: t('landing.faq.a1'),
+    },
+    {
+      q: t('landing.faq.q2'),
+      a: t('landing.faq.a2'),
+    },
+    {
+      q: t('landing.faq.q3'),
+      a: t('landing.faq.a3'),
+    },
+    {
+      q: t('landing.faq.q4'),
+      a: t('landing.faq.a4'),
+    },
+    {
+      q: t('landing.faq.q5'),
+      a: t('landing.faq.a5'),
+    },
+  ]
   useScrollReveal()
 
   return (
@@ -42,13 +37,10 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-14">
           <div className="land-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-xs text-cyan-400 mb-4">
-            FAQ
+            {t('landing.faq.badge')}
           </div>
-          <h2
-            className="land-reveal text-4xl sm:text-5xl font-bold text-white"
-            style={{ fontFamily: 'Syne, sans-serif', transitionDelay: '0.1s' }}
-          >
-            Common questions
+          <h2 className="land-reveal text-4xl sm:text-5xl font-bold text-white tracking-tight" style={{ transitionDelay: '0.1s' }}>
+            {t('landing.faq.title')}
           </h2>
         </div>
 
@@ -63,14 +55,13 @@ export default function FAQ() {
                 className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
                 onClick={() => setOpen(open === i ? null : i)}
               >
-                <span className="text-white text-sm font-medium"
-                      style={{ fontFamily: 'Syne, sans-serif' }}>
+                <span className="text-white text-sm font-bold tracking-tight">
                   {f.q}
                 </span>
-                <span
-                  className={`land-faq-icon flex-shrink-0 text-indigo-400 text-xl leading-none ${open === i ? 'open' : ''}`}
-                >
-                  +
+                <span className={`flex-shrink-0 text-gray-500 transform transition-transform duration-300 ${open === i ? 'rotate-180' : ''}`}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </span>
               </button>
               <div className={`land-faq-body px-6 ${open === i ? 'open' : ''}`}>

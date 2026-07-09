@@ -1,5 +1,4 @@
 /**
- * v2.2 Session 0 - tests for the S3-backed resume version dropdown.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'

@@ -1,9 +1,8 @@
 /**
- * Critical path frontend tests - v2.1
+ * Critical path frontend tests
  * Updated to wrap renders in QueryClientProvider for React Query compatibility.
  * Part 2: added tests for keyboard shortcuts (N / Escape / ?) and
  * per-column "Show more" pagination.
- * v2.2 Session 0: AddApplicationModal now uses ResumeVersionSelect (S3-backed,
  * React Query), so its tests need QueryClientProvider + a resolved listResumes mock.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -63,7 +62,6 @@ const renderWithProviders = (ui: React.ReactElement) => {
   )
 }
 
-// v2.2 Session 0: AddApplicationModal isn't wrapped in MemoryRouter (it doesn't
 // use routing), but it now needs QueryClientProvider for ResumeVersionSelect.
 const renderModalWithQueryClient = (ui: React.ReactElement) => {
   const client = createTestQueryClient()
@@ -104,7 +102,6 @@ describe('AddApplicationModal', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    // v2.2 Session 0: ResumeVersionSelect fetches resumes on mount via useResumes
     vi.mocked(api.listResumes).mockResolvedValue(SAMPLE_RESUMES)
   })
 
@@ -165,7 +162,6 @@ describe('AddApplicationModal', () => {
     expect(screen.getByText(/follow-up date/i)).toBeInTheDocument()
   })
 
-  // v2.2 Session 0: resume version dropdown tests
   it('defaults resume version to empty (no free-text default)', async () => {
     renderModalWithQueryClient(<AddApplicationModal onClose={mockOnClose} onSave={mockOnSave} />)
     await userEvent.type(screen.getByPlaceholderText('Anthropic'), 'Stripe')

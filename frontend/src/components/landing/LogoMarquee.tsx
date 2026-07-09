@@ -1,3 +1,5 @@
+import { useTranslation } from '../../lib/i18n/context'
+
 // Tech stack marquee strip - no external logos, text only to avoid license issues
 const TECH = [
   'AWS Lambda', 'Amazon DynamoDB', 'Amazon Cognito', 'Amazon Bedrock',
@@ -7,6 +9,7 @@ const TECH = [
 ]
 
 export default function LogoMarquee() {
+  const { t } = useTranslation()
   // Duplicate the array so the CSS infinite scroll looks seamless
   const items = [...TECH, ...TECH]
 
@@ -14,7 +17,7 @@ export default function LogoMarquee() {
     <section className="py-12 overflow-hidden border-y border-white/5"
              style={{ background: 'rgba(10,10,20,0.6)' }}>
       <p className="text-center text-xs text-gray-600 uppercase tracking-widest mb-6">
-        Built on AWS - production-grade serverless infrastructure
+        {t('landing.marquee.subtitle')}
       </p>
       <div className="relative">
         {/* Fade edges */}

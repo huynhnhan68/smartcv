@@ -15,21 +15,30 @@ import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+import * as kms from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
 // ─── SmartCV Owner Config ─────────────────────────────────────────────────────
-const OWNER_EMAIL    = 'huynhnhandn68@gmail.com';
-const GITHUB_USER    = 'huynhnhan68';
-const GITHUB_REPO    = 'smartcv';
-const APP_NAME       = 'smartcv';
-const APP_DISPLAY    = 'SmartCV';
+const OWNER_EMAIL = 'huynhnhandn68@gmail.com';
+const GITHUB_USER = 'huynhnhan68';
+const GITHUB_REPO = 'smartcv';
+const APP_NAME = 'smartcv';
+const APP_DISPLAY = 'SmartCV';
 const AMPLIFY_APP_ID = 'd1s2bq5nqqwd9y';
-const AMPLIFY_URL    = `https://main.${AMPLIFY_APP_ID}.amplifyapp.com`;
+const AMPLIFY_URL = `https://main.${AMPLIFY_APP_ID}.amplifyapp.com`;
 
 export class SmartCVStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // ─── KMS Key ──────────────────────────────────────────────────────────────
+    const smartCVKey = new kms.Key(this, 'SmartCVKey', {
+      alias: `alias/${APP_NAME}-key`,
+      description: 'Customer Managed KMS Key for SmartCV (DynamoDB, S3)',
+      enableKeyRotation: true,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    });
 
     // ─── DynamoDB ─────────────────────────────────────────────────────────────
     const table = new dynamodb.Table(this, 'SmartCVTable', {
@@ -40,6 +49,8 @@ export class SmartCVStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       pointInTimeRecovery: true,
       timeToLiveAttribute: 'ttl',
+      encryption: dynamodb.TableEncryption.CUSTOMER_MANAGED,
+      encryptionKey: smartCVKey,
     });
 
     table.addGlobalSecondaryIndex({
@@ -53,7 +64,8 @@ export class SmartCVStack extends cdk.Stack {
     const resumeBucket = new s3.Bucket(this, 'ResumeBucket', {
       bucketName: `${APP_NAME}-resumes-${this.account}`,
       versioned: true,
-      encryption: s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.KMS,
+      encryptionKey: smartCVKey,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ noncurrentVersionExpiration: cdk.Duration.days(90) }],
       cors: [{ allowedMethods: [s3.HttpMethods.PUT, s3.HttpMethods.GET], allowedOrigins: ['*'], allowedHeaders: ['*'], maxAge: 3000 }],
@@ -61,47 +73,11 @@ export class SmartCVStack extends cdk.Stack {
     });
 
 
-    // ─── S3 - Frontend (hosting) ──────────────────────────────────────────────
-    const frontendBucket = new s3.Bucket(this, 'FrontendBucket', {
-      bucketName: `${APP_NAME}-frontend-${this.account}`,
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      encryption: s3.BucketEncryption.S3_MANAGED,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-      autoDeleteObjects: true,
-    });
 
-    // ─── CloudFront Distribution (OAC tự động qua withOriginAccessControl) ─────────
-    const distribution = new cloudfront.Distribution(this, 'FrontendDistribution', {
-      defaultBehavior: {
-        origin: origins.S3BucketOrigin.withOriginAccessControl(frontendBucket),
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
-        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
-      },
-      defaultRootObject: 'index.html',
-      // SPA routing: 403/404 → index.html
-      errorResponses: [
-        {
-          httpStatus: 403,
-          responseHttpStatus: 200,
-          responsePagePath: '/index.html',
-          ttl: cdk.Duration.seconds(0),
-        },
-        {
-          httpStatus: 404,
-          responseHttpStatus: 200,
-          responsePagePath: '/index.html',
-          ttl: cdk.Duration.seconds(0),
-        },
-      ],
-      priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
-      comment: `${APP_DISPLAY} frontend distribution`,
-    });
-
-    const amplifyDomain      = AMPLIFY_URL;
-    const githubPagesDomain  = `https://${GITHUB_USER}.github.io`;
-    const githubPagesApp     = `${githubPagesDomain}/${GITHUB_REPO}`;
-    const cloudfrontDomain   = `https://${distribution.distributionDomainName}`;
+    const amplifyDomain = AMPLIFY_URL;
+    const githubPagesDomain = `https://${GITHUB_USER}.github.io`;
+    const githubPagesApp = `${githubPagesDomain}/${GITHUB_REPO}`;
+    const cloudfrontDomain = `https://dummydomain.cloudfront.net`;
 
     // ─── Cognito User Pool ────────────────────────────────────────────────────
     const userPool = new cognito.UserPool(this, 'UserPool', {
@@ -114,11 +90,7 @@ export class SmartCVStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 
-    // ─── Google OAuth credentials từ Secrets Manager ──────────────────────────
-    // Tạo secret trước khi deploy lần đầu bằng lệnh:
-    //   aws secretsmanager create-secret --name smartcv/google-oauth \
-    //     --secret-string '{"client_id":"YOUR_ID","client_secret":"YOUR_SECRET"}' \
-    //     --region ap-southeast-1
+
     const googleOAuthSecret = secretsmanager.Secret.fromSecretNameV2(
       this, 'GoogleOAuthSecret', `${APP_NAME}/google-oauth`
     );
@@ -201,7 +173,7 @@ export class SmartCVStack extends cdk.Stack {
       AWS_XRAY_TRACING_NAME: APP_NAME,
     };
 
-    const runtime      = lambda.Runtime.PYTHON_3_12;
+    const runtime = lambda.Runtime.PYTHON_3_12;
     const architecture = lambda.Architecture.ARM_64;
     const logRetention = logs.RetentionDays.ONE_MONTH;
     const tracingConfig = lambda.Tracing.ACTIVE;
@@ -476,11 +448,11 @@ export class SmartCVStack extends cdk.Stack {
       description: `${APP_DISPLAY} REST API`,
       defaultCorsPreflightOptions: {
         allowOrigins: [
-          cloudfrontDomain,
-          githubPagesDomain,
-          githubPagesApp,
           'http://localhost:5173',
           'http://localhost:5174',
+          githubPagesDomain,
+          githubPagesApp,
+          amplifyDomain
         ],
         allowMethods: apigateway.Cors.ALL_METHODS,
         allowHeaders: ['Content-Type', 'Authorization'],
@@ -525,6 +497,9 @@ export class SmartCVStack extends cdk.Stack {
     resumesResource.addResource('upload-url').addMethod('POST', new apigateway.LambdaIntegration(applicationsLambda), authOptions);
     resumesResource.addResource('list').addMethod('GET', new apigateway.LambdaIntegration(applicationsLambda), authOptions);
 
+    const resumeResource = resumesResource.addResource('{versionName}');
+    resumeResource.addMethod('DELETE', new apigateway.LambdaIntegration(applicationsLambda), authOptions);
+
     const usersResource = api.root.addResource('users');
     const settingsResource = usersResource.addResource('settings');
     settingsResource.addMethod('GET', new apigateway.LambdaIntegration(settingsLambda), authOptions);
@@ -538,18 +513,18 @@ export class SmartCVStack extends cdk.Stack {
     noteResource.addMethod('DELETE', new apigateway.LambdaIntegration(notesLambda), authOptions);
 
     // ─── CDK Outputs ──────────────────────────────────────────────────────────
-    new cdk.CfnOutput(this, 'ApiUrl',             { value: api.url,                                   description: `${APP_DISPLAY} REST API → VITE_API_URL` });
-    new cdk.CfnOutput(this, 'AmplifyUrl',          { value: AMPLIFY_URL,                               description: '✅ Amplify Hosting URL (primary frontend - CloudFront inside)' });
-    new cdk.CfnOutput(this, 'CloudFrontUrl',       { value: cloudfrontDomain,                          description: `CloudFront HTTPS URL → dùng cho frontend (cần account verified)` });
-    new cdk.CfnOutput(this, 'FrontendBucketName',  { value: frontendBucket.bucketName,                 description: `S3 Frontend Bucket → deploy "npm run build" vào đây` });
-    new cdk.CfnOutput(this, 'DistributionId',      { value: distribution.distributionId,               description: 'CloudFront Distribution ID → dùng để invalidate cache' });
-    new cdk.CfnOutput(this, 'GitHubPagesUrl',      { value: githubPagesApp,                            description: 'GitHub Pages frontend URL (fallback)' });
-    new cdk.CfnOutput(this, 'UserPoolId',          { value: userPool.userPoolId,                       description: `Cognito User Pool ID → VITE_USER_POOL_ID` });
-    new cdk.CfnOutput(this, 'UserPoolClientId',    { value: userPoolClient.userPoolClientId,           description: `Cognito Client ID → VITE_USER_POOL_CLIENT_ID` });
-    new cdk.CfnOutput(this, 'ResumeBucketName',    { value: resumeBucket.bucketName,                  description: 'S3 Resume Bucket' });
-    new cdk.CfnOutput(this, 'AlarmTopicArn',       { value: alarmTopic.topicArn,                      description: 'SNS Alarm Topic ARN' });
-    new cdk.CfnOutput(this, 'SharedLayerArn',      { value: sharedLayer.layerVersionArn,              description: 'Lambda Shared Layer ARN' });
-    new cdk.CfnOutput(this, 'HostedUiBaseUrl',     {
+    new cdk.CfnOutput(this, 'ApiUrl', { value: api.url, description: `${APP_DISPLAY} REST API → VITE_API_URL` });
+    new cdk.CfnOutput(this, 'AmplifyUrl', { value: AMPLIFY_URL, description: '✅ Amplify Hosting URL (primary frontend - CloudFront inside)' });
+    // new cdk.CfnOutput(this, 'CloudFrontUrl', { value: cloudfrontDomain, description: `CloudFront HTTPS URL → dùng cho frontend (cần account verified)` });
+    // new cdk.CfnOutput(this, 'FrontendBucketName', { value: frontendBucket.bucketName, description: `S3 Frontend Bucket → deploy "npm run build" vào đây` });
+    // new cdk.CfnOutput(this, 'DistributionId', { value: distribution.distributionId, description: 'CloudFront Distribution ID → dùng để invalidate cache' });
+    new cdk.CfnOutput(this, 'GitHubPagesUrl', { value: githubPagesApp, description: 'GitHub Pages frontend URL (fallback)' });
+    new cdk.CfnOutput(this, 'UserPoolId', { value: userPool.userPoolId, description: `Cognito User Pool ID → VITE_USER_POOL_ID` });
+    new cdk.CfnOutput(this, 'UserPoolClientId', { value: userPoolClient.userPoolClientId, description: `Cognito Client ID → VITE_USER_POOL_CLIENT_ID` });
+    new cdk.CfnOutput(this, 'ResumeBucketName', { value: resumeBucket.bucketName, description: 'S3 Resume Bucket' });
+    new cdk.CfnOutput(this, 'AlarmTopicArn', { value: alarmTopic.topicArn, description: 'SNS Alarm Topic ARN' });
+    new cdk.CfnOutput(this, 'SharedLayerArn', { value: sharedLayer.layerVersionArn, description: 'Lambda Shared Layer ARN' });
+    new cdk.CfnOutput(this, 'HostedUiBaseUrl', {
       value: `https://${APP_NAME}-auth.auth.${this.region}.amazoncognito.com`,
       description: 'Cognito Hosted UI (dùng trong Amplify oauth config)',
     });

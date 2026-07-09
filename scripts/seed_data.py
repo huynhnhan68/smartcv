@@ -1,4 +1,4 @@
-﻿"""
+"""
 SmartCV — Seed Data Script
 Populates DynamoDB with realistic job applications for demo purposes.
 
@@ -21,7 +21,7 @@ from datetime import datetime, timezone, timedelta
 from random import choice, randint, uniform
 
 TABLE_NAME = 'SmartCV'
-REGION = 'us-east-1'
+REGION = 'ap-southeast-1'
 
 dynamodb = boto3.resource('dynamodb', region_name=REGION)
 table = dynamodb.Table(TABLE_NAME)
@@ -257,7 +257,7 @@ def seed(user_id: str):
             print(f"  ✓ {app_data['company']} — {app_data['role']} ({app_data['status']})")
 
     print(f"\n✅ Done — {created} applications seeded.")
-    print(f"\nOpen your app and refresh: https://d3jumje9o63lys.cloudfront.net")
+    print(f"\nOpen your app and refresh: https://huynhnhan68.github.io/SmartCV")
     print("\nPattern highlights in this seed data:")
     print("  • v3-ml-focused resume: highest response rate (referral + LinkedIn)")
     print("  • v1-generic resume: mostly rejections from enterprise companies")

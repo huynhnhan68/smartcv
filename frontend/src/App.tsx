@@ -1,4 +1,4 @@
-﻿import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -7,7 +7,7 @@ import { Hub } from 'aws-amplify/utils'
 import './lib/amplify'
 import { getInitialTheme, applyTheme } from './lib/theme'
 import { queryClient } from './lib/queryClient'
-
+import { I18nProvider } from './lib/i18n/context'
 import Sidebar from './components/layout/Sidebar'
 import ErrorBoundary from './components/layout/ErrorBoundary'
 import Dashboard from './pages/Dashboard'
@@ -17,8 +17,8 @@ import CoachChat from './components/chat/CoachChat'
 import ResumeUpload from './components/resume/ResumeUpload'
 import Landing from './pages/Landing'
 import AuthModal from './components/landing/AuthModal'
-import PrivacyPolicy from './pages/PrivacyPolicy'   // v2.3 Session 5
-import Terms from './pages/Terms'                   // v2.3 Session 5
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Terms from './pages/Terms'
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -155,7 +155,7 @@ function AppShell({
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100">
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-20 lg:hidden"
@@ -224,8 +224,8 @@ function Root() {
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/login"         element={<AuthModal initialView="login"  isModal={false} />} />
         <Route path="/signup"        element={<AuthModal initialView="signup" isModal={false} />} />
-        <Route path="/privacy"       element={<PrivacyPolicy />} />   {/* v2.3 Session 5 */}
-        <Route path="/terms"         element={<Terms />} />           {/* v2.3 Session 5 */}
+        <Route path="/privacy"       element={<PrivacyPolicy />} />
+        <Route path="/terms"         element={<Terms />} />
 
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
@@ -255,19 +255,23 @@ function Root() {
 }
 
 // ── App ────────────────────────────────────────────────────────────────────────
-export default function App() {
+// ── App ────────────────────────────────────────────────────────────────────────
+function App() {
   const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename={basename}>
-        <Root />
-      </BrowserRouter>
-      <Toaster
-        position="top-center"
-        toastOptions={{ style: { fontSize: '13px' }, duration: 3000 }}
-      />
-    </QueryClientProvider>
+    <I18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter basename={basename}>
+          <Root />
+          <Toaster 
+            position="top-center"
+            toastOptions={{ style: { fontSize: '13px' }, duration: 3000 }}
+          />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </I18nProvider>
   )
 }
 
+export default App

@@ -1,17 +1,17 @@
-﻿import { NavLink, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Kanban, BarChart2, MessageSquare, Upload, LogOut, Sun, Moon, X } from 'lucide-react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { LayoutDashboard, Kanban, BarChart2, MessageSquare, Upload, LogOut, Sun, Moon, X, Globe } from 'lucide-react'
 import { signOut, getCurrentUser } from 'aws-amplify/auth'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useTranslation } from '../../lib/i18n/context'
 
-// v2.3: Dashboard route moved from '/' to '/dashboard'
 const nav = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/board',     icon: Kanban,          label: 'Board' },
-  { to: '/analytics', icon: BarChart2,        label: 'Analytics' },
-  { to: '/coach',     icon: MessageSquare,    label: 'AI Coach' },
-  { to: '/resumes',   icon: Upload,           label: 'Resumes' },
-]
+  { to: '/dashboard', icon: LayoutDashboard, labelKey: 'sidebar.dashboard' },
+  { to: '/board',     icon: Kanban,          labelKey: 'sidebar.board' },
+  { to: '/analytics', icon: BarChart2,        labelKey: 'sidebar.analytics' },
+  { to: '/coach',     icon: MessageSquare,    labelKey: 'sidebar.coach' },
+  { to: '/resumes',   icon: Upload,           labelKey: 'sidebar.resumes' },
+] as const;
 
 interface Props {
   theme: 'dark' | 'light'
@@ -23,6 +23,7 @@ interface Props {
 export default function Sidebar({ theme, toggleTheme, sidebarOpen, setSidebarOpen }: Props) {
   const [userEmail, setUserEmail] = useState('')
   const location = useLocation()
+  const { t, language, setLanguage } = useTranslation()
 
   useEffect(() => {
     getCurrentUser().then(u => setUserEmail(u.signInDetails?.loginId ?? '')).catch(() => {})
@@ -54,7 +55,7 @@ export default function Sidebar({ theme, toggleTheme, sidebarOpen, setSidebarOpe
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {nav.map(({ to, icon: Icon, label }) => (
+        {nav.map(({ to, icon: Icon, labelKey }) => (
           <NavLink
             key={to}
             to={to}
@@ -68,18 +69,31 @@ export default function Sidebar({ theme, toggleTheme, sidebarOpen, setSidebarOpe
             onClick={() => setSidebarOpen(false)}
           >
             <Icon size={16} />
-            {label}
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>
 
       <div className="px-3 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
         <button
+          onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+          className="flex items-center justify-between px-3 py-2 w-full rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <Globe size={16} />
+            <span>{language === 'en' ? 'English' : 'Tiếng Việt'}</span>
+          </div>
+          <span className="text-[10px] font-semibold bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-gray-500">
+            {language === 'en' ? 'EN' : 'VI'}
+          </span>
+        </button>
+
+        <button
           onClick={toggleTheme}
           className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-100 transition-colors"
         >
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          {theme === 'dark' ? t('sidebar.lightMode') : t('sidebar.darkMode')}
         </button>
 
         {userEmail && (
@@ -96,7 +110,7 @@ export default function Sidebar({ theme, toggleTheme, sidebarOpen, setSidebarOpe
           className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-red-500 dark:hover:text-red-400 transition-colors"
         >
           <LogOut size={16} />
-          Sign out
+          {t('sidebar.signOut')}
         </button>
       </div>
     </aside>

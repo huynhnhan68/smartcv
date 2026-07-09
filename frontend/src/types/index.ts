@@ -18,7 +18,7 @@ export interface Application {
   companySize: 'startup' | 'mid' | 'enterprise' | ''
   jobDescUrl: string
   notes: string
-  followUpDate: string | null  // v2.0: YYYY-MM-DD, null if not set
+  followUpDate: string | null
   createdAt: string
   updatedAt: string
 }
@@ -35,7 +35,6 @@ export interface InsightBreakdown {
   responseRate: number
 }
 
-// v2.1: funnel stage returned by the insights Lambda
 export interface FunnelStage {
   stage: string
   count: number
@@ -43,14 +42,12 @@ export interface FunnelStage {
   conversionFromStart: number
 }
 
-// v2.1: one data point in the response-rate time series
 export interface ResponseRatePoint {
   week: string        // "M/DD" label, e.g. "5/12"
   responseRate: number
   total: number
 }
 
-// v2.1: one week of status history (how many apps per status applied that week)
 export interface StatusHistoryPoint {
   week: string
   applied: number
@@ -79,20 +76,21 @@ export interface Patterns {
     bestCompanySize: { name: string; responseRate: number } | null
   }
   velocity: Record<string, number>
-  // v2.1 additions
   funnel: { stages: FunnelStage[] }
   responseRateTimeSeries: ResponseRatePoint[]
   statusHistory: StatusHistoryPoint[]
+  timeToOffer?: {
+    total: number
+    avgDays?: number
+  }
 }
 
-// v2.0: user settings - weekly goal and streak
 export interface UserSettings {
   weeklyGoal: number
   streakCount: number
   streakLastUpdated: string | null
 }
 
-// v2.0: timestamped note on an application
 export interface Note {
   noteId: string
   appId: string

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Digest Lambda — v1.2
 Triggered every Monday 8am UTC by EventBridge.
 """
@@ -85,19 +85,23 @@ def generate_weekly_tip(apps: list, week_events: list) -> str:
 
     prompt = f"You are a job search coach. Based on this week's data, give ONE specific, actionable tip (2-3 sentences max). Be direct and data-driven.\n{week_summary}\nWeekly tip:"
 
-    response = bedrock.invoke_model(
-        modelId=MODEL_ID,
-        body=json.dumps(
-            {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 200, "messages": [{"role": "user", "content": prompt}]}
-            if "anthropic" in MODEL_ID else
-            {"messages": [{"role": "user", "content": [{"text": prompt}]}], "inferenceConfig": {"maxTokens": 200}}
-        ),
-    )
-    result = json.loads(response["body"].read())
-    if "anthropic" in MODEL_ID:
-        return result["content"][0]["text"].strip()
-    else:
-        return result["output"]["message"]["content"][0]["text"].strip()
+    try:
+        response = bedrock.invoke_model(
+            modelId=MODEL_ID,
+            body=json.dumps(
+                {"anthropic_version": "bedrock-2023-05-31", "max_tokens": 200, "messages": [{"role": "user", "content": prompt}]}
+                if "anthropic" in MODEL_ID else
+                {"messages": [{"role": "user", "content": [{"text": prompt}]}], "inferenceConfig": {"maxTokens": 200}}
+            ),
+        )
+        result = json.loads(response["body"].read())
+        if "anthropic" in MODEL_ID:
+            return result["content"][0]["text"].strip()
+        else:
+            return result["output"]["message"]["content"][0]["text"].strip()
+    except Exception as e:
+        logger.warning(f"Bedrock invocation failed, using default tip. Error: {str(e)}")
+        return "Keep applying consistently and make sure to follow up on your applications within 1-2 weeks."
 
 
 def build_email_html(apps: list, week_events: list, tip: str, user_email: str) -> str:

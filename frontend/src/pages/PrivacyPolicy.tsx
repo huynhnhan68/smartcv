@@ -1,4 +1,4 @@
-﻿// Privacy Policy page - linked from footer, public route, no auth required.
+// Privacy Policy page - linked from footer, public route, no auth required.
 // Dark-themed to match the landing page since users arrive from the footer.
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -22,10 +22,10 @@ export default function PrivacyPolicy() {
       <div className="border-b border-white/5 px-6 py-4">
         <a href="/" className="flex items-center gap-2.5 w-fit">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-               style={{ background: '#534ab7' }}>
-            <span className="text-white font-bold text-sm leading-none">A</span>
+               style={{ background: '#2563eb' }}>
+            <span className="text-white font-bold text-sm leading-none">S</span>
           </div>
-          <span className="text-white font-semibold" style={{ fontFamily: 'Syne, sans-serif' }}>
+          <span className="text-white font-semibold tracking-tight">
             smartcv
           </span>
         </a>
@@ -33,11 +33,10 @@ export default function PrivacyPolicy() {
 
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-white mb-3"
-              style={{ fontFamily: 'Syne, sans-serif' }}>
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
             Privacy Policy
           </h1>
-          <p className="text-gray-500 text-sm">Last updated: June 2026</p>
+          <p className="text-gray-500 text-sm">Last updated: 2026</p>
         </div>
 
         <Section title="Overview">
@@ -55,14 +54,14 @@ export default function PrivacyPolicy() {
         <Section title="Data we collect">
           <p><span className="text-gray-200 font-medium">Account data</span> - Your email address,
           collected when you sign up via email/password or Google OAuth. Stored in Amazon Cognito
-          (AWS, us-east-1).</p>
+          (AWS, ap-southeast-1).</p>
 
           <p><span className="text-gray-200 font-medium">Application data</span> - Job application
           records you create: company name, role, status, source channel, resume version, company size,
-          job description URL, follow-up date, notes. Stored in Amazon DynamoDB (AWS, us-east-1).</p>
+          job description URL, follow-up date, notes. Stored in Amazon DynamoDB (AWS, ap-southeast-1).</p>
 
           <p><span className="text-gray-200 font-medium">Resume files</span> - PDF files you
-          upload via the Resumes page. Stored in Amazon S3 (AWS, us-east-1) under a path
+          upload via the Resumes page. Stored in Amazon S3 (AWS, ap-southeast-1) under a path
           prefixed with your user ID. Only you can access your files.</p>
 
           <p><span className="text-gray-200 font-medium">Usage data</span> - AI Coach chat
@@ -99,7 +98,7 @@ export default function PrivacyPolicy() {
 
         <Section title="Data storage and security">
           <p>
-            All data is stored on AWS infrastructure in the us-east-1 region (N. Virginia).
+            All data is stored on AWS infrastructure in the ap-southeast-1 region (Singapore).
             DynamoDB tables use AWS-managed encryption at rest. S3 buckets use S3-managed
             encryption and are fully private - no public access is permitted. API routes are
             protected by Cognito JWT authorisation.

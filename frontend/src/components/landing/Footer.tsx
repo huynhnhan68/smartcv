@@ -1,59 +1,60 @@
-﻿import { Link } from 'react-router-dom'
-
-const FOOTER_LINKS = {
-  Product: [
-    { label: 'Features',      href: '#features',   anchor: true },
-    { label: 'How it works',  href: '#how-it-works', anchor: true },
-    { label: 'Changelog',     href: 'https://github.com/huynhnhan68/smartcv/blob/main/CHANGELOG.md', external: true },
-  ],
-  Developers: [
-    { label: 'GitHub Repo',       href: 'https://github.com/huynhnhan68/smartcv', external: true },
-    { label: 'API Docs',          href: 'https://d3jumje9o63lys.cloudfront.net/api/docs/index.html', external: true },
-    { label: 'Self-Host Guide',   href: 'https://github.com/huynhnhan68/smartcv/blob/main/CONTRIBUTING.md', external: true },
-    { label: 'FAQ',               href: '#faq', anchor: true },
-  ],
-  Company: [
-    { label: 'About',            href: '#about', anchor: true },
-    { label: 'Privacy Policy',   href: '/privacy', internal: true },
-    { label: 'Terms of Service', href: '/terms', internal: true },
-    { label: 'Contact',          href: 'https://github.com/huynhnhan68', external: true },
-  ],
-}
-
-interface LinkItem {
-  label: string
-  href: string
-  anchor?: boolean
-  external?: boolean
-  internal?: boolean
-}
-
-function FooterLink({ item }: { item: LinkItem }) {
-  const cls = "text-sm text-gray-500 hover:text-indigo-400 transition-colors"
-
-  if (item.anchor) {
-    return (
-      <button
-        className={cls}
-        onClick={() => document.getElementById(item.href.replace('#', ''))?.scrollIntoView({ behavior: 'smooth' })}
-      >
-        {item.label}
-      </button>
-    )
-  }
-  if (item.external) {
-    return (
-      <a href={item.href} target="_blank" rel="noreferrer" className={cls}>
-        {item.label}
-      </a>
-    )
-  }
-  // internal route - use React Router Link so basename is respected.
-  // Plain <a href="/privacy"> resolves from domain root, ignoring /smartcv basename.
-  return <Link to={item.href} className={cls}>{item.label}</Link>
-}
+import { Link } from 'react-router-dom'
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function Footer() {
+  const { t } = useTranslation()
+
+  interface LinkItem {
+    label: string
+    href: string
+    anchor?: boolean
+    external?: boolean
+    internal?: boolean
+  }
+
+  function FooterLink({ item }: { item: LinkItem }) {
+    const cls = "text-sm text-gray-500 hover:text-blue-400 transition-colors"
+
+    if (item.anchor) {
+      return (
+        <button
+          className={cls}
+          onClick={() => document.getElementById(item.href.replace('#', ''))?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          {item.label}
+        </button>
+      )
+    }
+    if (item.external) {
+      return (
+        <a href={item.href} target="_blank" rel="noreferrer" className={cls}>
+          {item.label}
+        </a>
+      )
+    }
+    return <Link to={item.href} className={cls}>{item.label}</Link>
+  }
+
+  const FOOTER_LINKS = {
+    [t('landing.footer.links.Product')]: [
+      { label: t('landing.footer.links.Features'),      href: '#features',   anchor: true },
+      { label: t('landing.footer.links.HowItWorks'),  href: '#how-it-works', anchor: true },
+      { label: t('landing.footer.links.Changelog'),     href: 'https://github.com/huynhnhan68/smartcv/blob/main/CHANGELOG.md', external: true },
+    ],
+    [t('landing.footer.links.Developers')]: [
+      { label: t('landing.footer.links.GitHubRepo'),       href: 'https://github.com/huynhnhan68/smartcv', external: true },
+      { label: t('landing.footer.links.APIDocs'),          href: 'https://huynhnhan68.github.io/SmartCV/api/docs/index.html', external: true },
+      { label: t('landing.footer.links.SelfHostGuide'),   href: 'https://github.com/huynhnhan68/smartcv/blob/main/CONTRIBUTING.md', external: true },
+      { label: t('landing.footer.links.FAQ'),               href: '#faq', anchor: true },
+    ],
+    [t('landing.footer.links.Company')]: [
+      { label: t('landing.footer.links.About'),            href: '#about', anchor: true },
+      { label: t('landing.footer.links.PrivacyPolicy'),   href: '/privacy', internal: true },
+      { label: t('landing.footer.links.TermsOfService'), href: '/terms', internal: true },
+      { label: t('landing.footer.links.Contact'),          href: 'https://github.com/huynhnhan68', external: true },
+    ],
+  }
+
   return (
     <footer className="border-t border-white/5 py-16 px-6"
             style={{ background: 'rgba(5,5,10,0.8)' }}>
@@ -63,16 +64,15 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                   style={{ background: '#534ab7' }}>
-                <span className="text-white font-bold text-base leading-none">A</span>
+                   style={{ background: '#2563eb' }}>
+                <span className="text-white font-bold text-base leading-none">S</span>
               </div>
-              <span className="text-white font-semibold text-lg"
-                    style={{ fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-white font-semibold text-lg tracking-tight">
                 smartcv
               </span>
             </div>
             <p className="text-gray-500 text-xs leading-relaxed max-w-[200px]">
-              AI-powered job application tracker. Free to use. Built on AWS.
+              {t('landing.footer.desc')}
             </p>
           </div>
 
@@ -96,9 +96,9 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-600">
-            &copy; 2026 smartcv - Built by{' '}
+            &copy; 2026 smartcv - {t('landing.footer.builtBy')}{' '}
             <a href="https://github.com/huynhnhan68" target="_blank" rel="noreferrer"
-               className="text-gray-500 hover:text-indigo-400 transition-colors">
+               className="text-gray-500 hover:text-blue-400 transition-colors">
               SmartCV Team
             </a>
           </p>

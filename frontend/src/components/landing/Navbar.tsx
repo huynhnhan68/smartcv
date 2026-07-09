@@ -1,6 +1,8 @@
-﻿import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStatus } from './useAuthStatus'
+import { Globe } from 'lucide-react'
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -10,6 +12,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
   const isAuthenticated = useAuthStatus()
+  const { t, language, setLanguage } = useTranslation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,10 +42,10 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { label: 'Features',     id: 'features' },
-    { label: 'How it works', id: 'how-it-works' },
-    { label: 'About',        id: 'about' },
-    { label: 'FAQ',          id: 'faq' },
+    { label: t('landing.nav.features'),     id: 'features' },
+    { label: t('landing.nav.howItWorks'), id: 'how-it-works' },
+    { label: t('landing.nav.about'),        id: 'about' },
+    { label: t('landing.nav.faq'),          id: 'faq' },
   ]
 
   return (
@@ -58,8 +61,8 @@ export default function Navbar() {
           className="flex items-center gap-2.5"
         >
           <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-               style={{ background: '#534ab7' }}>
-            <span className="text-white font-bold text-base leading-none">A</span>
+               style={{ background: '#2563eb' }}>
+            <span className="text-white font-bold text-base leading-none">S</span>
           </div>
           <span className="text-white font-semibold text-lg tracking-tight"
                 style={{ fontFamily: 'Syne, sans-serif' }}>
@@ -82,14 +85,21 @@ export default function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setLanguage(language === 'en' ? 'vi' : 'en')}
+            className="text-sm text-gray-400 hover:text-white transition-colors px-3 py-2 flex items-center gap-2"
+          >
+            <Globe size={16} />
+            <span>{language === 'en' ? 'EN' : 'VI'}</span>
+          </button>
           {isAuthenticated ? (
             // Already logged in - show a single "Go to Dashboard" link
             <button
               onClick={() => navigate('/dashboard', { replace: true })}
-              className="text-sm font-medium px-4 py-2 rounded-lg text-white transition-all hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+              className="text-sm font-semibold px-5 py-2 rounded-full text-white transition-all hover:scale-105"
+              style={{ background: '#2563eb', border: '1px solid rgba(255,255,255,0.1)' }}
             >
-              Go to Dashboard
+              {t('landing.nav.dashboard')}
             </button>
           ) : (
             <>
@@ -97,14 +107,14 @@ export default function Navbar() {
                 onClick={() => openAuth('/login')}
                 className="text-sm text-gray-400 hover:text-white transition-colors px-3 py-2"
               >
-                Log in
+                {t('landing.nav.login')}
               </button>
               <button
                 onClick={() => openAuth('/signup')}
-                className="text-sm font-medium px-4 py-2 rounded-lg text-white transition-all hover:opacity-90 hover:scale-[1.02]"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+                className="text-sm font-semibold px-5 py-2 rounded-full text-white transition-all hover:scale-105"
+                style={{ background: '#2563eb', border: '1px solid rgba(255,255,255,0.1)' }}
               >
-                Get Started Free
+                {t('landing.nav.getStarted')}
               </button>
             </>
           )}
@@ -144,13 +154,23 @@ export default function Navbar() {
             </button>
           ))}
           <div className="pt-2 border-t border-white/5 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setLanguage(language === 'en' ? 'vi' : 'en')
+                setMobileOpen(false)
+              }}
+              className="text-sm text-gray-400 hover:text-white text-left py-2 flex items-center gap-2"
+            >
+              <Globe size={16} />
+              <span>{language === 'en' ? 'English' : 'Tiếng Việt'}</span>
+            </button>
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/dashboard', { replace: true })}
-                className="text-sm font-medium px-4 py-2.5 rounded-lg text-white text-center"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+                className="text-sm font-semibold px-4 py-2.5 rounded-full text-white text-center"
+                style={{ background: '#2563eb' }}
               >
-                Go to Dashboard
+                {t('landing.nav.dashboard')}
               </button>
             ) : (
               <>
@@ -158,14 +178,14 @@ export default function Navbar() {
                   onClick={() => openAuth('/login')}
                   className="text-sm text-gray-400 hover:text-white text-left py-2"
                 >
-                  Log in
+                  {t('landing.nav.login')}
                 </button>
                 <button
                   onClick={() => openAuth('/signup')}
-                  className="text-sm font-medium px-4 py-2.5 rounded-lg text-white text-center"
-                  style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+                  className="text-sm font-semibold px-4 py-2.5 rounded-full text-white text-center"
+                  style={{ background: '#2563eb' }}
                 >
-                  Get Started Free
+                  {t('landing.nav.getStarted')}
                 </button>
               </>
             )}

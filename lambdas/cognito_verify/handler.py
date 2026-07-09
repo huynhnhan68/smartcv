@@ -4,7 +4,7 @@ Triggered automatically after a user confirms their Cognito account.
 Sends SES email verification so the user can receive Monday digests.
 
 Note: Never blocks Cognito signup — all errors are caught and swallowed.
-In v2.0 this is replaced by SES production access.
+
 """
 import os
 import boto3

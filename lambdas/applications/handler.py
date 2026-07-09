@@ -1,9 +1,9 @@
 """
-Applications Lambda - v2.0
+Applications Lambda
 Handles: GET/POST /applications, GET/PUT/DELETE /applications/{appId},
          POST /applications/{appId}/status, POST /resumes/upload-url, GET /resumes/list
 
-v2.0 change: followUpDate field added to CreateApplicationRequest and UpdateApplicationRequest.
+ followUpDate field added to CreateApplicationRequest and UpdateApplicationRequest.
 """
 import os
 import uuid
@@ -40,7 +40,7 @@ class CreateApplicationRequest(BaseModel):
     jobDescUrl: Optional[str] = ""
     companySize: Optional[Literal["startup", "mid", "enterprise", ""]] = ""
     notes: Optional[str] = ""
-    followUpDate: Optional[str] = None  # v2.0: YYYY-MM-DD, nullable
+    followUpDate: Optional[str] = None
 
     @field_validator("company", "role")
     @classmethod
@@ -71,7 +71,7 @@ class UpdateApplicationRequest(BaseModel):
     companySize: Optional[str] = None
     notes: Optional[str] = None
     dateApplied: Optional[str] = None
-    followUpDate: Optional[str] = None  # v2.0: can update or clear (pass null to clear)
+    followUpDate: Optional[str] = None
 
     @field_validator("followUpDate")
     @classmethod
@@ -133,7 +133,7 @@ def create_application(user_id: str, body: dict, event: dict) -> dict:
         "resumeVersion": req.resumeVersion, "source": req.source,
         "jobDescUrl": req.jobDescUrl, "companySize": req.companySize,
         "notes": req.notes,
-        "followUpDate": req.followUpDate,  # v2.0
+        "followUpDate": req.followUpDate,
         "createdAt": ts, "updatedAt": ts,
         "entityType": "APPLICATION",
     }
@@ -162,11 +162,10 @@ def update_application(user_id: str, app_id: str, body: dict, event: dict) -> di
 
     allowed = [
         "company", "role", "jobDescUrl", "resumeVersion", "source",
-        "companySize", "notes", "dateApplied", "followUpDate",  # v2.0
+        "companySize", "notes", "dateApplied", "followUpDate",
     ]
     updates = {k: v for k, v in req.model_dump(exclude_none=True).items() if k in allowed}
 
-    # v2.0: support explicitly clearing followUpDate by passing null in body
     # model_dump(exclude_none=True) skips None, so we check raw body separately
     if "followUpDate" in body and body["followUpDate"] is None:
         updates["followUpDate"] = None
@@ -268,6 +267,21 @@ def list_resumes(user_id: str, event: dict) -> dict:
     return resp(200, {"resumes": resumes}, event)
 
 
+@tracer.capture_method
+def delete_resume(user_id: str, version_name: str, event: dict) -> dict:
+    prefix = f"resumes/{user_id}/{version_name}/"
+    result = s3_client.list_objects_v2(Bucket=RESUME_BUCKET, Prefix=prefix)
+    
+    if "Contents" not in result:
+        return resp(404, {"error": "Resume version not found"}, event)
+        
+    delete_keys = [{'Key': obj['Key']} for obj in result['Contents']]
+    s3_client.delete_objects(Bucket=RESUME_BUCKET, Delete={'Objects': delete_keys})
+    
+    logger.info("Resume version deleted", extra={"version_name": version_name, "deleted_count": len(delete_keys)})
+    return resp(200, {"message": "Resume version deleted"}, event)
+
+
 @logger.inject_lambda_context(correlation_id_path="requestContext.requestId")
 @tracer.capture_lambda_handler
 def lambda_handler(event: dict, context: LambdaContext) -> dict:
@@ -291,6 +305,8 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
             return get_upload_url(user_id, body, event)
         if method == "GET" and path.endswith("/resumes/list"):
             return list_resumes(user_id, event)
+        if method == "DELETE" and path.startswith("/resumes/") and path_params.get("versionName"):
+            return delete_resume(user_id, path_params.get("versionName"), event)
         if method == "POST" and app_id and path.endswith("/status"):
             return update_status(user_id, app_id, body, event)
         if path.endswith("/applications"):

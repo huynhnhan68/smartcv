@@ -18,8 +18,6 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 logger = Logger(service=os.environ.get("POWERTOOLS_SERVICE_NAME", "SmartCV"))
 
 ALLOWED_ORIGINS = [
-    "https://d3jumje9o63lys.cloudfront.net",
-    "https://main.d1s2bq5nqqwd9y.amplifyapp.com",
     "https://huynhnhan68.github.io",
     "https://huynhnhan68.com",
     "http://localhost:5173",

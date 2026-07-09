@@ -1,5 +1,5 @@
 ﻿"""
-Settings Lambda - v2.0
+Settings Lambda
 Handles: GET /users/settings, PUT /users/settings
 
 Fix: compute_streak was using a rolling 7-day window (days//7) which means

@@ -1,5 +1,5 @@
-﻿"""
-Unit tests for Follow-up Lambda - v2.0
+"""
+Unit tests for Follow-up Lambda
 Tests: get_overdue_followups, get_user_email, build_followup_email,
        send_followup_email, lambda_handler
 Run: python -m pytest tests/test_followup.py -v
@@ -142,7 +142,7 @@ class TestGetUserEmail:
             "UserAttributes": [{"Name": "email", "Value": "user@test.com"}]
         }
         with patch("followup_handler.cognito", mock_cognito), \
-             patch.dict(os.environ, {"USER_POOL_ID": "us-east-1_test"}):
+             patch.dict(os.environ, {"USER_POOL_ID": "ap-southeast-1_test"}):
             email = get_user_email("user-123")
         assert email == "user@test.com"
 
@@ -150,7 +150,7 @@ class TestGetUserEmail:
         mock_cognito = MagicMock()
         mock_cognito.admin_get_user.return_value = {"UserAttributes": []}
         with patch("followup_handler.cognito", mock_cognito), \
-             patch.dict(os.environ, {"USER_POOL_ID": "us-east-1_test"}):
+             patch.dict(os.environ, {"USER_POOL_ID": "ap-southeast-1_test"}):
             email = get_user_email("user-123")
         assert email is None
 
@@ -158,7 +158,7 @@ class TestGetUserEmail:
         mock_cognito = MagicMock()
         mock_cognito.admin_get_user.side_effect = Exception("Cognito error")
         with patch("followup_handler.cognito", mock_cognito), \
-             patch.dict(os.environ, {"USER_POOL_ID": "us-east-1_test"}):
+             patch.dict(os.environ, {"USER_POOL_ID": "ap-southeast-1_test"}):
             email = get_user_email("user-123")
         assert email is None
 

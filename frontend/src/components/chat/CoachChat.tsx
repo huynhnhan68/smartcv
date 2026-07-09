@@ -3,6 +3,7 @@ import { Send, Bot, User, Trash2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { chatWithCoach } from '../../lib/api'
 import type { Message } from '../../App'
+import { useTranslation } from '../../lib/i18n/context'
 
 interface Props {
   messages: Message[]
@@ -25,6 +26,7 @@ export default function CoachChat({ messages, setMessages }: Props) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -56,15 +58,15 @@ export default function CoachChat({ messages, setMessages }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">AI Coach</h1>
-          <p className="text-sm text-gray-400 mt-0.5">Powered by your actual application data</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('coach.title')}</h1>
+          <p className="text-sm text-gray-400 mt-0.5">{t('coach.subtitle')}</p>
         </div>
         {messages.length > 1 && (
           <button
             onClick={clearChat}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-400 hover:text-red-500 border border-gray-200 dark:border-gray-700 hover:border-red-300 rounded-lg transition-colors"
           >
-            <Trash2 size={12} /> Clear chat
+            <Trash2 size={12} /> {t('coach.clearChat')}
           </button>
         )}
       </div>
@@ -88,7 +90,7 @@ export default function CoachChat({ messages, setMessages }: Props) {
             }`}>
               {msg.role === 'assistant' ? (
                 <div className="markdown">
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <ReactMarkdown>{(i === 0 && msg.content.startsWith('Hi!')) ? t('coach.initialMessage') : msg.content}</ReactMarkdown>
                 </div>
               ) : (
                 msg.content
@@ -117,10 +119,10 @@ export default function CoachChat({ messages, setMessages }: Props) {
       {/* Suggestion chips */}
       {isInitialState && (
         <div className="flex flex-wrap gap-2 mb-3 shrink-0">
-          {SUGGESTIONS.map(s => (
+          {[t('coach.suggestion1'), t('coach.suggestion2'), t('coach.suggestion3'), t('coach.suggestion4')].map((s, i) => (
             <button
-              key={s}
-              onClick={() => send(s)}
+              key={i}
+              onClick={() => send(SUGGESTIONS[i])}
               className="text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-full text-gray-500 dark:text-gray-400 hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
             >
               {s}
@@ -130,20 +132,22 @@ export default function CoachChat({ messages, setMessages }: Props) {
       )}
 
       {/* Input */}
-      <div className="flex gap-2 shrink-0">
+      <div className="flex gap-2 shrink-0 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-1 bg-white dark:bg-gray-800 items-center">
         <input
-          className="flex-1 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-          placeholder="Ask your coach anything..."
+          type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send(input)}
+          placeholder={t('coach.inputPlaceholder')}
+          className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 text-gray-900 dark:text-gray-100"
           disabled={loading}
         />
         <button
           onClick={() => send(input)}
-          disabled={loading || !input.trim()}
-          className="px-4 py-2.5 bg-brand-600 text-white rounded-xl hover:bg-brand-800 disabled:opacity-40 transition-colors"
+          disabled={!input.trim() || loading}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 disabled:bg-brand-600/50 text-white rounded-md text-sm font-medium transition-colors"
         >
+          <span className="hidden sm:inline">{t('coach.send')}</span>
           <Send size={15} />
         </button>
       </div>

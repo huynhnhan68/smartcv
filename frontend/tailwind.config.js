@@ -22,19 +22,17 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:  '#eeedfe',
-          100: '#cecbf6',
-          400: '#7f77dd',
-          600: '#534ab7',
-          800: '#3c3489',
+          50:  '#eff6ff',
+          100: '#dbeafe',
+          400: '#60a5fa',
+          600: '#2563eb',
+          800: '#1e40af',
         },
       },
       fontFamily: {
         // App UI font - unchanged
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        // v2.3: landing page display font (headings, logo wordmark)
         syne: ['Syne', 'system-ui', 'sans-serif'],
-        // v2.3: landing page body font
         dm: ['DM Sans', 'system-ui', 'sans-serif'],
       },
     },

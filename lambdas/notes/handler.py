@@ -1,5 +1,5 @@
 ﻿"""
-Notes Lambda - v2.0
+Notes Lambda
 Handles:
   GET    /applications/{appId}/notes          - list all notes for an application
   POST   /applications/{appId}/notes          - add a new note

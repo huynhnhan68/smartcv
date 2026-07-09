@@ -1,69 +1,71 @@
-﻿import { useScrollReveal } from './useScrollReveal'
-
-const STEPS = [
-  {
-    n: 1,
-    iconColor: '#818cf8',
-    iconBg: 'rgba(99,102,241,0.15)',
-    badgeColor: '#6366f1',
-    connectorColor: 'rgba(99,102,241,0.5)',
-    icon: (
-      <>
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-      </>
-    ),
-    title: 'Log every application',
-    desc: 'Add company, role, source channel, resume version, company size, and job URL. Takes 20 seconds per application. Import from CSV if you already have a list.',
-    hint: 'CSV import supported',
-  },
-  {
-    n: 2,
-    iconColor: '#22d3ee',
-    iconBg: 'rgba(34,211,238,0.12)',
-    badgeColor: '#06b6d4',
-    connectorColor: 'rgba(139,92,246,0.5)',
-    icon: (
-      <polyline points="2 12 6 6 10 18 14 8 18 14 22 12"/>
-    ),
-    title: 'Track status as you go',
-    desc: 'Drag cards through Applied - Screened - Interview - Offer on the Kanban board. Every status change is timestamped and stored. Add notes after every interaction.',
-    hint: 'Full timeline per card',
-  },
-  {
-    n: 3,
-    iconColor: '#a78bfa',
-    iconBg: 'rgba(167,139,250,0.12)',
-    badgeColor: '#8b5cf6',
-    connectorColor: 'rgba(6,182,212,0.5)',
-    icon: (
-      <>
-        <line x1="18" y1="20" x2="18" y2="10"/>
-        <line x1="12" y1="20" x2="12" y2="4"/>
-        <line x1="6" y1="20" x2="6" y2="14"/>
-      </>
-    ),
-    title: 'Patterns surface automatically',
-    desc: 'The analytics engine computes response rates per resume version, per source channel, per company size. No setup - it runs on every page load from your real data.',
-    hint: '6 analysis dimensions',
-  },
-  {
-    n: 4,
-    iconColor: '#4ade80',
-    iconBg: 'rgba(74,222,128,0.1)',
-    badgeColor: '#22c55e',
-    connectorColor: '',
-    icon: (
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    ),
-    title: 'Ask your AI coach',
-    desc: 'Chat with a coach that has read every row. Ask "which resume is converting best?" or "why am I getting ghosted after screening?" and get a data-specific answer.',
-    hint: 'Powered by Amazon Nova Lite',
-  },
-]
+import { useScrollReveal } from './useScrollReveal'
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function HowItWorks() {
+  const { t } = useTranslation()
   useScrollReveal()
+
+  const STEPS = [
+    {
+      n: 1,
+      iconColor: '#60a5fa',
+      badgeText: '01',
+      badgeColor: '#3b82f6',
+      connectorColor: 'rgba(99,102,241,0.5)',
+      icon: (
+        <>
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </>
+      ),
+      title: t('landing.howItWorks.s1.title'),
+      desc: t('landing.howItWorks.s1.desc'),
+      hint: t('landing.howItWorks.s1.hint'),
+    },
+    {
+      n: 2,
+      iconColor: '#22d3ee',
+      badgeText: '02',
+      badgeColor: '#06b6d4',
+      connectorColor: 'rgba(139,92,246,0.5)',
+      icon: (
+        <polyline points="2 12 6 6 10 18 14 8 18 14 22 12"/>
+      ),
+      title: t('landing.howItWorks.s2.title'),
+      desc: t('landing.howItWorks.s2.desc'),
+      hint: t('landing.howItWorks.s2.hint'),
+    },
+    {
+      n: 3,
+      iconColor: '#38bdf8',
+      badgeText: '03',
+      badgeColor: '#0ea5e9',
+      connectorColor: 'rgba(6,182,212,0.5)',
+      icon: (
+        <>
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </>
+      ),
+      title: t('landing.howItWorks.s3.title'),
+      desc: t('landing.howItWorks.s3.desc'),
+      hint: t('landing.howItWorks.s3.hint'),
+    },
+    {
+      n: 4,
+      iconColor: '#4ade80',
+      iconBg: 'rgba(74,222,128,0.1)',
+      badgeColor: '#22c55e',
+      connectorColor: '',
+      icon: (
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      ),
+      title: t('landing.howItWorks.s4.title'),
+      desc: t('landing.howItWorks.s4.desc'),
+      hint: t('landing.howItWorks.s4.hint'),
+    },
+  ]
 
   // Height of the icon box is 104px. The number badge overflows by ~10px on top
   // (badge is -top-2.5 = -10px relative to the icon box container).
@@ -79,20 +81,19 @@ export default function HowItWorks() {
         {/* Header */}
         <div className="text-center mb-20">
           <p className="land-reveal text-xs font-semibold tracking-widest uppercase mb-4"
-             style={{ color: '#818cf8', letterSpacing: '0.15em' }}>
-            How it works
+             style={{ color: '#60a5fa', letterSpacing: '0.15em' }}>
+            {t('landing.howItWorks.label')}
           </p>
           <h2
-            className="land-reveal text-4xl sm:text-5xl font-bold text-white mb-4"
-            style={{ fontFamily: 'Syne, sans-serif', transitionDelay: '0.05s' }}
+            className="land-reveal text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight"
+            style={{ transitionDelay: '0.05s' }}
           >
-            From spreadsheet to{' '}
-            <span className="land-grad-text">signal</span>
+            {t('landing.howItWorks.title1')}{' '}
+            <span className="land-grad-text">{t('landing.howItWorks.title2')}</span>
           </h2>
           <p className="land-reveal text-gray-400 text-lg max-w-xl mx-auto"
              style={{ transitionDelay: '0.1s' }}>
-            smartcv turns scattered applications into a structured intelligence
-            system in minutes.
+            {t('landing.howItWorks.subtitle')}
           </p>
         </div>
 
@@ -125,15 +126,14 @@ export default function HowItWorks() {
                   {/* Number badge */}
                   <div
                     className="absolute -top-2.5 -right-2.5 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-lg"
-                    style={{ background: s.badgeColor, fontFamily: 'Syne, sans-serif' }}
+                    style={{ background: s.badgeColor }}
                   >
                     {s.n}
                   </div>
                 </div>
 
                 {/* Text */}
-                <h3 className="text-white font-bold text-base mb-3"
-                    style={{ fontFamily: 'Syne, sans-serif' }}>
+                <h3 className="text-white font-bold text-base mb-3">
                   {s.title}
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4 px-2">

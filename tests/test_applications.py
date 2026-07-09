@@ -1,6 +1,6 @@
 """
-Tests for the Applications Lambda - v2.0
-v2.0 additions: followUpDate field tests in create and update.
+Tests for the Applications Lambda
+ followUpDate field tests in create and update.
 Stubs shared layer, powertools, pydantic, xray before loading handler.
 Run: python -m pytest tests/test_applications.py -v
 """
@@ -211,7 +211,6 @@ class TestCreateApplication:
         app_id = json.loads(result['body'])['application']['appId']
         assert re.match(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', app_id)
 
-    # v2.0: followUpDate tests
     def test_creates_with_follow_up_date(self):
         event = make_event('POST', '/applications', body={
             'company': 'Stripe', 'role': 'Eng', 'status': 'applied',

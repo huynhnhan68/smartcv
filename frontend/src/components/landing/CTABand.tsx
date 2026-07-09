@@ -1,8 +1,10 @@
-﻿import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useScrollReveal } from './useScrollReveal'
 import { useAuthStatus } from './useAuthStatus'
+import { useTranslation } from '../../lib/i18n/context'
 
 export default function CTABand() {
+  const { t } = useTranslation()
   useScrollReveal()
   const navigate = useNavigate()
   const location = useLocation()
@@ -30,24 +32,21 @@ export default function CTABand() {
                style={{ background: 'radial-gradient(ellipse 60% 60% at 50% 0%, rgba(99,102,241,0.2), transparent)' }} />
 
           <div className="relative z-10">
-            <h2
-              className="text-4xl sm:text-5xl font-bold text-white mb-4"
-              style={{ fontFamily: 'Syne, sans-serif' }}
-            >
-              {isAuthenticated ? 'Welcome back' : 'Start tracking your search today'}
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
+              {isAuthenticated ? t('landing.cta.title.auth') : t('landing.cta.title.unauth')}
             </h2>
             <p className="text-gray-400 text-lg mb-8 max-w-xl mx-auto">
               {isAuthenticated
-                ? 'Your dashboard is ready.'
-                : 'Free to use. No card required. Takes 30 seconds to sign up.'}
+                ? t('landing.cta.subtitle.auth')
+                : t('landing.cta.subtitle.unauth')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handlePrimary}
                 className="group px-8 py-3.5 rounded-xl font-semibold text-white text-base transition-all hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(99,102,241,0.4)]"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+                style={{ background: 'linear-gradient(135deg, #3b82f6, #38bdf8)' }}
               >
-                {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
+                {isAuthenticated ? t('landing.nav.dashboard') : t('landing.nav.getStarted')}
                 <span className="ml-2 group-hover:translate-x-1 inline-block transition-transform">-&gt;</span>
               </button>
               {!isAuthenticated && (
@@ -58,7 +57,7 @@ export default function CTABand() {
                   className="px-8 py-3.5 rounded-xl font-medium text-gray-300 text-base border border-white/10 hover:border-indigo-500/40 hover:text-white transition-all text-center"
                   style={{ background: 'rgba(255,255,255,0.03)' }}
                 >
-                  View on GitHub
+                  {t('landing.cta.btn.github')}
                 </a>
               )}
             </div>
