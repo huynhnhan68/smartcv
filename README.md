@@ -4,7 +4,7 @@
 
 > AI-powered job application tracker that learns from your rejections.
 
-### 🚀 [Start Using SmartCV](https://huynhnhan68.com/SmartCV/)
+###  [Start Using SmartCV](https://smartcvknight.click/)
 *Live in production. Free to use.*
 
 SmartCV tracks every job application you submit, detects patterns across rejections (which resume version converts best, which source channel works, which company sizes respond), and uses Amazon Bedrock to turn that data into actionable coaching - delivered as a chat interface and a weekly email digest.
