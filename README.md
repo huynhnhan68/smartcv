@@ -1,95 +1,107 @@
-# SmartCV
+<div align="center">
 
-![CI/CD](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml/badge.svg)
+#  SmartCV
 
-> AI-powered job application tracker that learns from your rejections.
+**AI-powered job application tracker that learns from your rejections.**
 
-### 🚀 [Start Using SmartCV](https://huynhnhan68.com/SmartCV/)
-*Live in production. Free to use.*
+[![CI/CD](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml/badge.svg)](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml)
+![AWS](https://img.shields.io/badge/AWS-Serverless-orange?logo=amazon-aws)
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-SmartCV tracks every job application you submit, detects patterns across rejections (which resume version converts best, which source channel works, which company sizes respond), and uses Amazon Bedrock to turn that data into actionable coaching - delivered as a chat interface and a weekly email digest.
+###  [Dùng thử SmartCV ngay](https://huynhnhan68.com/SmartCV/)
+*Đang chạy trên môi trường production – Miễn phí.*
 
-Built end-to-end on AWS as a production-grade application. Every service is serverless, infrastructure is code, and every push auto-deploys via GitHub Actions.
-
----
-
-## Why I Built This
-
-I was job hunting and had no data on why I was getting rejected. I had a spreadsheet with company names and "rejected" written next to most of them - but no signal on *why*. Was it my resume? The channel? The company size?
-
-So I instrumented my own job search. Every application became a data point. After a few weeks I had enough data to see that my `v1-generic` resume had a 0% response rate from enterprise companies, while `v3-ml-focused` was getting interviews from startups via referrals. That's the kind of insight you can act on.
+</div>
 
 ---
 
-## Key Features
+##  Giới thiệu
 
-**Application tracking**
-- Log applications with company, role, source channel, resume version, company size, job description URL, follow-up date
-- Kanban board with drag-and-drop status updates (Applied - Screened - Interview - Offer / Rejected)
-- Click any card to view full detail, edit all fields, change status, see timeline
-- Search by company/role, filter by source channel
-- Color-coded left border per status on kanban cards for instant visual scanning
-- Amber "Follow up" badge on overdue cards
+SmartCV là công cụ theo dõi ứng tuyển việc làm được hỗ trợ bởi AI. Nó ghi lại mọi đơn ứng tuyển bạn gửi đi, phát hiện các quy luật ẩn sau những lần từ chối — phiên bản CV nào có tỷ lệ chuyển đổi tốt nhất, kênh tìm việc nào hiệu quả, quy mô công ty nào phản hồi — và sử dụng **Amazon Bedrock** để biến dữ liệu đó thành lời khuyên hành động thực tế, thông qua giao diện chat và email digest hàng tuần.
 
-**Weekly goal tracking**
-- Set a weekly application target on the Dashboard
-- Progress bar showing current week vs goal, turns green when met
-- Streak counter - consecutive weeks hitting your goal (fire icon)
-- Inline goal editing - click the pencil to update your target anytime
+Được xây dựng hoàn toàn trên AWS theo chuẩn production. Mọi service đều Serverless, infrastructure là code, và mỗi lần push code đều tự động deploy qua GitHub Actions.
 
-**AI insight engine**
-- Pattern analysis across 6 dimensions: source channel, company size, resume version, role seniority, weekly velocity, status funnel
-- Response rate computed per bucket - shows exactly which resume version or source is working
-- AI coaching chat powered by Bedrock - answers questions like "why am I getting ghosted?" using your actual data as context
-- Markdown rendering in chat responses
-- Weekly email digest every Monday with stats + one AI-generated personalised tip
+> **Câu chuyện thực tế:** Khi đang tìm việc, tôi không có dữ liệu nào để hiểu tại sao mình bị từ chối. Sau vài tuần dùng SmartCV, tôi phát hiện ra rằng CV `v1-generic` của mình có tỷ lệ phản hồi 0% từ các công ty lớn, trong khi `v3-ml-focused` lại đang nhận được lịch phỏng vấn từ các startup qua kênh referral. **Đó mới là insight có thể hành động được.**
 
-**Resume version tracker**
-- Upload multiple PDF versions to S3 via presigned URLs
-- Delete outdated resume versions
-- Tag each application with which version was used
-- Analytics shows conversion rate per version side-by-side
+---
 
-**Modern UI / UX**
-- Fully revamped Landing Page with feature showcases, FAQs, and deep dives.
-- Multi-language support (i18n).
-- Full dark mode with system preference detection, persisted to localStorage
-- Mobile responsive - hamburger sidebar on small screens
-- Meaningful empty states with calls to action
+##  Tính năng chính
+
+<details>
+<summary><strong> Theo dõi đơn ứng tuyển</strong></summary>
+
+- Ghi lại đơn ứng tuyển với đầy đủ thông tin: công ty, vị trí, kênh tìm việc, phiên bản CV, quy mô công ty, URL mô tả công việc, ngày follow-up
+- **Kanban board** với kéo-thả cập nhật trạng thái: Applied → Screened → Interview → Offer / Rejected
+- Xem chi tiết, chỉnh sửa toàn bộ fields, thay đổi trạng thái và xem timeline từng đơn
+- Tìm kiếm theo công ty/vị trí, lọc theo kênh tìm việc
+- Màu viền trái theo trạng thái để nhận diện nhanh
+- Badge "Follow up" màu vàng cho các đơn quá hạn follow-up
+
+</details>
+
+<details>
+<summary><strong>Theo dõi mục tiêu hàng tuần</strong></summary>
+
+- Đặt mục tiêu số lượng đơn ứng tuyển mỗi tuần trực tiếp trên Dashboard
+- Thanh tiến trình hiển thị tuần hiện tại so với mục tiêu, chuyển xanh khi đạt đủ
+- Bộ đếm streak – số tuần liên tiếp đạt mục tiêu 
+- Chỉnh sửa mục tiêu inline – click vào biểu tượng bút chì để cập nhật bất kỳ lúc nào
+
+</details>
+
+<details>
+<summary><strong> AI Insight Engine</strong></summary>
+
+- Phân tích quy luật theo **6 chiều**: kênh tìm việc, quy mô công ty, phiên bản CV, cấp bậc vai trò, tốc độ ứng tuyển hàng tuần, phễu trạng thái
+- Tỷ lệ phản hồi được tính theo từng nhóm – cho thấy chính xác phiên bản CV hay kênh nào đang hiệu quả
+- **AI coaching chat** được hỗ trợ bởi Amazon Bedrock – trả lời các câu hỏi như *"Tại sao tôi bị ghosted?"* dựa trên dữ liệu thực của bạn
+- Render Markdown trong phản hồi chat
+- **Email digest hàng tuần** mỗi thứ Hai với thống kê + một tip cá nhân hóa do AI tạo ra
+
+</details>
+
+<details>
+<summary><strong>Quản lý phiên bản CV</strong></summary>
+
+- Upload nhiều phiên bản PDF lên S3 qua presigned URL
+- Xóa các phiên bản CV cũ không còn dùng
+- Gán từng đơn ứng tuyển với phiên bản CV đã dùng
+- Analytics hiển thị tỷ lệ chuyển đổi từng phiên bản song song
+
+</details>
+
+<details>
+<summary><strong>Giao diện hiện đại</strong></summary>
+
+- Landing Page được thiết kế lại hoàn toàn với showcase tính năng, FAQ, và deep dive
+- Hỗ trợ đa ngôn ngữ (i18n)
+- **Dark mode** đầy đủ với phát hiện tự động theo system preference, lưu vào localStorage
+- Responsive trên mobile – sidebar hamburger trên màn hình nhỏ
+- Empty states có ý nghĩa với call-to-action
 - Toast notifications (top-center)
 
----
-
-## Architecture
-
-SmartCV is built using a modern 100% Serverless architecture on AWS.
-
-**Frontend Layer**
-- React + Vite + Tailwind CSS
-- Hosted on **AWS Amplify** (primary) and **GitHub Pages** (fallback)
-
-**Auth Layer**
-- **Amazon Cognito**: Email + Password authentication, issuing JWTs (Access + ID).
-
-**API Layer**
-- **API Gateway (REST)**: Protected by Cognito JWT Authorizer.
-
-**Compute Layer (AWS Lambda - ARM64 / Python 3.12)**
-- `applications`: CRUD + status transitions, S3 presigned URL generation, Resume list/delete.
-- `insights`: Pattern analysis engine + Bedrock AI chat.
-- `settings`: Weekly goal config, user preferences.
-- `notes`: Per-application notes timeline.
-- `digest` (EventBridge Mon 8am UTC): Weekly summary via Bedrock + SES email.
-- `followup` (EventBridge Daily 9am UTC): Overdue reminders + SES email.
-
-**Data & Storage**
-- **Amazon DynamoDB**: Single-table design (Entities: Applications, Notes, Settings, Users, Streaks).
-- **Amazon S3**: Private resume bucket with time-limited presigned URLs for reads/writes.
-- **Amazon Bedrock**: Amazon Nova Lite model for AI insights and chat.
+</details>
 
 ---
 
-## API Routes
+## Kiến trúc hệ thống
+
+### Lambda Functions
+
+| Function | Trigger | Mô tả |
+|---|---|---|
+| `applications` | API Gateway | CRUD đơn ứng tuyển, S3 presigned URL, Resume list/delete |
+| `insights` | API Gateway | Pattern analysis engine + Bedrock AI chat |
+| `settings` | API Gateway | Cấu hình mục tiêu hàng tuần, user preferences |
+| `notes` | API Gateway | Timeline ghi chú theo từng đơn ứng tuyển |
+| `digest` | EventBridge (Thứ Hai 8am UTC) | Tóm tắt hàng tuần qua Bedrock + gửi email SES |
+| `followup` | EventBridge (Hàng ngày 9am UTC) | Nhắc nhở các đơn follow-up quá hạn qua SES |
+
+---
+
+##  API Routes
 
 ```
 GET    /v1/applications
@@ -98,78 +110,137 @@ GET    /v1/applications/{appId}
 PUT    /v1/applications/{appId}
 DELETE /v1/applications/{appId}
 POST   /v1/applications/{appId}/status
+
 GET    /v1/applications/{appId}/notes
 POST   /v1/applications/{appId}/notes
 DELETE /v1/applications/{appId}/notes/{noteId}
+
 POST   /v1/resumes/upload-url
 GET    /v1/resumes/list
 DELETE /v1/resumes/{versionName}
+
 GET    /v1/insights
 POST   /v1/insights/chat
+
 GET    /v1/users/settings
 PUT    /v1/users/settings
 ```
 
-All routes protected by Cognito JWT authorizer.
+> Tất cả routes đều được bảo vệ bởi Cognito JWT authorizer.
 
 ---
 
 ## Tech Stack
 
-| Layer | Service |
+| Layer | Công nghệ |
 |---|---|
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS, react-i18next |
-| Auth | Amazon Cognito (email + JWT) |
-| API | API Gateway REST + Lambda (Python 3.12, ARM64) |
-| AI / ML | Amazon Bedrock - Amazon Nova Lite |
-| Database | DynamoDB - single-table design, PAY_PER_REQUEST |
-| Storage | S3 - resume versioning |
-| Hosting | AWS Amplify / GitHub Pages /route 53|
-| Scheduling | EventBridge cron |
-| Email | Amazon SES |
-| IaC | AWS CDK v2 TypeScript |
-| CI/CD | GitHub Actions |
+| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, react-i18next |
+| **Auth** | Amazon Cognito (Email + JWT) |
+| **API** | API Gateway REST + Lambda (Python 3.12, ARM64) |
+| **AI / ML** | Amazon Bedrock – Amazon Nova Lite |
+| **Database** | DynamoDB – Single-table design, PAY_PER_REQUEST |
+| **Storage** | S3 – Resume versioning với presigned URL |
+| **Hosting** | AWS Amplify, Route 53, GitHub Pages (fallback) |
+| **Scheduling** | EventBridge cron |
+| **Email** | Amazon SES |
+| **IaC** | AWS CDK v2 TypeScript |
+| **CI/CD** | GitHub Actions + OIDC |
 
 ---
 
-## Local Setup
+##  Cài đặt cục bộ
 
-### Prerequisites
+### Yêu cầu
+
 - Node.js 18+
 - Python 3.12
-- AWS CLI configured (`aws configure`)
+- AWS CLI đã cấu hình (`aws configure`)
 - AWS CDK CLI: `npm install -g aws-cdk`
 
-### Deploy backend
+### 1. Deploy Backend
+
 ```bash
+# Build Lambda shared layer
 bash scripts/build_layer.sh
+
+# Deploy toàn bộ infrastructure lên AWS
 cd cdk && npm install && cdk deploy
 ```
 
-### Run frontend locally
+### 2. Chạy Frontend
+
 ```bash
 cd frontend && npm install && npm run dev
 ```
 
-### Run tests
+### 3. Chạy Unit Tests
+
 ```bash
+# Cài đặt dependencies
 pip install pytest boto3 pydantic aws-lambda-powertools pytest-cov
 pip install "moto[dynamodb,s3,ses,cognitoidp]"
+
+# Chạy tests (yêu cầu coverage >= 70%)
 python -m pytest tests/ -v --tb=short --cov=lambdas --cov-fail-under=70
 ```
 
-### Run frontend tests
+### 4. Chạy Frontend Tests
+
 ```bash
 cd frontend && npm run test
 ```
 
-### Seed demo data
+### 5. Seed dữ liệu demo
+
 ```bash
 cd scripts && python seed_data.py --user-id YOUR_COGNITO_SUB
 ```
 
 ---
 
-## Author
+##  Cấu trúc thư mục
 
-**SmartCV Team** - [Github](https://github.com/huynhnhan68)
+```
+SmartCV/
+├── .github/
+│   ├── workflows/        # GitHub Actions CI/CD pipelines
+│   └── dependabot.yml    # Tự động cập nhật dependencies
+├── cdk/                  # AWS CDK infrastructure (TypeScript)
+├── frontend/             # React + Vite + Tailwind CSS
+│   └── src/
+├── lambdas/              # Lambda functions (Python 3.12)
+│   ├── applications/
+│   ├── insights/
+│   ├── settings/
+│   ├── notes/
+│   ├── digest/
+│   ├── followup/
+│   └── shared_layer/     # Shared utilities (models, auth, db)
+├── scripts/
+│   ├── build_layer.sh    # Build Lambda Layer zip
+│   ├── seed_data.py      # Seeder dữ liệu demo
+│   └── setup_oidc_v11.sh # Thiết lập OIDC cho GitHub Actions
+├── tests/                # Unit tests
+├── amplify.yml           # AWS Amplify build config
+└── pytest.ini            # Cấu hình pytest
+```
+
+---
+
+## CI/CD & Bảo mật
+
+- **Zero secret storage**: GitHub Actions sử dụng **OIDC** để kết nối với AWS – không có AWS credentials nào được lưu trong GitHub Secrets.
+- **Auto deploy**: Mỗi push lên `main` sẽ tự động build frontend và deploy Lambda functions.
+- **Dependabot**: Tự động tạo PR cập nhật dependencies npm và pip.
+
+---
+
+##  Tác giả
+
+**SmartCV Team** – [GitHub](https://github.com/huynhnhan68)
+
+---
+
+<div align="center">
+<sub>Built with on AWS Serverless</sub>
+</div>
