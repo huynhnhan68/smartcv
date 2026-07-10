@@ -4,17 +4,10 @@
 
 **AI-powered job application tracker that learns from your rejections.**
 
-[![CI/CD](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml/badge.svg)](https://github.com/huynhnhan68/SmartCV/actions/workflows/deploy.yml)
-![AWS](https://img.shields.io/badge/AWS-Serverless-orange?logo=amazon-aws)
-![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
-![License](https://img.shields.io/badge/License-MIT-green)
-
 ###  [Start Using SmartCV](https://smartcvknight.click/)
 *Live in production. Free to use.*
 
-###  [Dùng thử SmartCV ngay](https://huynhnhan68.com/SmartCV/)
-*Đang chạy trên môi trường production – Miễn phí.*
+
 
 </div>
 
@@ -240,7 +233,7 @@ SmartCV/
 
 ##  Tác giả
 
-**SmartCV Team** – [GitHub](https://github.com/huynhnhan68)
+**SmartCV Team** 
 
 ---
 
