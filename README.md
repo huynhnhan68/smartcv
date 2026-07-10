@@ -10,6 +10,9 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+###  [Start Using SmartCV](https://smartcvknight.click/)
+*Live in production. Free to use.*
+
 ###  [Dùng thử SmartCV ngay](https://huynhnhan68.com/SmartCV/)
 *Đang chạy trên môi trường production – Miễn phí.*
 
